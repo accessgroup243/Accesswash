@@ -387,6 +387,7 @@ transition:0.2s;
 
 <div class="nav-label">Finance</div>
 <button class="nav-btn" onclick="showPage('paiements',this)"><span class="nav-icon">💰</span>Paiements</button>
+<button class="nav-btn" onclick="showPage('rapports',this)"><span class="nav-icon">📊</span>Rapports</button>
 
 <div class="sidebar-footer">
 <div class="user-card">
@@ -522,6 +523,47 @@ transition:0.2s;
 <table class="table"><thead><tr><th>Client</th><th>Service</th><th>Montant</th><th>Méthode</th><th>Date</th><th>Statut</th></tr></thead>
 <tbody id="pay-table"></tbody></table>
 </div>
+</div>
+<!-- RAPPORTS -->
+<div id="rapports" class="page">
+<div class="page-header">
+<div><div class="page-title">Rapports 📊</div><div class="page-sub">Statistiques et analyses Access Wash</div></div>
+<button class="btn btn-primary" onclick="exportRapport()">📥 Exporter</button>
+</div>
+
+```
+<!-- STATS PRINCIPALES -->
+<div class="stats-grid" style="margin-bottom:20px" id="rap-stats"></div>
+
+<div class="grid-2">
+<!-- SERVICES -->
+<div class="card">
+<div class="card-title">🚗 Réservations par service</div>
+<div id="rap-services"></div>
+</div>
+
+<!-- AGENTS -->
+<div class="card">
+<div class="card-title">🧹 Performance des agents</div>
+<div id="rap-agents"></div>
+</div>
+</div>
+
+<div style="margin-top:18px" class="grid-2">
+<!-- ZONES -->
+<div class="card">
+<div class="card-title">📍 Réservations par zone</div>
+<div id="rap-zones"></div>
+</div>
+
+<!-- SOURCES -->
+<div class="card">
+<div class="card-title">📱 Source des réservations</div>
+<div id="rap-sources"></div>
+</div>
+</div>
+```
+
 </div>
 
 </main>
@@ -864,12 +906,108 @@ document.getElementById('r-source').value = 'WhatsApp Bot';
 openModal('modal-res');
 }
 
+function renderRapports() {
+// STATS
+const total = reservations.length;
+const termines = reservations.filter(r=>r.statut==='Terminé').length;
+const attente = reservations.filter(r=>r.statut==='En attente').length;
+const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+
+const statsEl = document.getElementById('rap-stats');
+if(statsEl) statsEl.innerHTML = `
+<div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon">📅</div><div class="stat-val">${total}</div><div class="stat-lbl">Total réservations</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon">✅</div><div class="stat-val">${termines}</div><div class="stat-lbl">Terminées</div><div class="stat-chg" style="color:var(--green)">${total?Math.round(termines/total*100):0}% du total</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon">⏳</div><div class="stat-val">${attente}</div><div class="stat-lbl">En attente</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--wa-green)"></div><div class="stat-icon">🤖</div><div class="stat-val">${waBot}</div><div class="stat-lbl">Via WhatsApp Bot</div><div class="stat-chg" style="color:var(--cyan)">${total?Math.round(waBot/total*100):0}% automatique</div></div>
+`;
+
+// SERVICES
+const services = {};
+reservations.forEach(r=>{ services[r.service]=(services[r.service]||0)+1; });
+const maxS = Math.max(...Object.values(services), 1);
+const servicesEl = document.getElementById('rap-services');
+if(servicesEl) servicesEl.innerHTML = Object.entries(services).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`
+<div style="margin-bottom:14px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+<span>${s}</span><span style="color:var(--cyan);font-weight:600">${n} réservation${n>1?'s':''}</span>
+</div>
+<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
+<div style="background:linear-gradient(90deg,var(--blue),var(--cyan));height:100%;width:${Math.round(n/maxS*100)}%;border-radius:20px;transition:width 0.5s"></div>
+</div>
+</div>
+`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+
+// AGENTS
+const agentStats = {};
+reservations.forEach(r=>{ agentStats[r.agent]=(agentStats[r.agent]||0)+1; });
+const maxA = Math.max(...Object.values(agentStats), 1);
+const agentsEl = document.getElementById('rap-agents');
+if(agentsEl) agentsEl.innerHTML = Object.entries(agentStats).sort((a,b)=>b[1]-a[1]).map(([a,n],i)=>{
+const colors = ['#FFD60A','#C0C0C0','#CD7F32','#00C2FF','#00E5A0'];
+return `
+<div style="margin-bottom:14px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;align-items:center">
+<span style="display:flex;align-items:center;gap:6px">
+${i<3?`<span style="font-size:16px">${['🥇','🥈','🥉'][i]}</span>`:''}
+${a}
+</span>
+<span style="color:var(--yellow);font-weight:600">${n} lavage${n>1?'s':''}</span>
+</div>
+<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
+<div style="background:linear-gradient(90deg,${colors[i]||'#6B7A99'},${colors[i]||'#6B7A99'}99);height:100%;width:${Math.round(n/maxA*100)}%;border-radius:20px"></div>
+</div>
+</div>`;
+}).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+
+// ZONES
+const zones = {};
+reservations.forEach(r=>{ if(r.zone&&r.zone!=='—') zones[r.zone]=(zones[r.zone]||0)+1; });
+const maxZ = Math.max(...Object.values(zones), 1);
+const zonesEl = document.getElementById('rap-zones');
+if(zonesEl) zonesEl.innerHTML = Object.entries(zones).sort((a,b)=>b[1]-a[1]).map(([z,n])=>`
+<div style="margin-bottom:12px">
+<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+<span>📍 ${z}</span><span style="color:var(--orange);font-weight:600">${n}</span>
+</div>
+<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:7px;overflow:hidden">
+<div style="background:linear-gradient(90deg,var(--orange),var(--yellow));height:100%;width:${Math.round(n/maxZ*100)}%;border-radius:20px"></div>
+</div>
+</div>
+`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+
+// SOURCES
+const sources = {};
+reservations.forEach(r=>{ sources[r.source]=(sources[r.source]||0)+1; });
+const sourcesEl = document.getElementById('rap-sources');
+if(sourcesEl) sourcesEl.innerHTML = Object.entries(sources).map(([s,n])=>`
+<div class="agent-row">
+<div style="font-size:22px">${s==='WhatsApp Bot'?'🤖':s==='Manuel'?'👤':'📞'}</div>
+<div class="agent-inf"><div class="agent-nm">${s}</div><div class="agent-zn">${n} réservation${n>1?'s':''}</div></div>
+<div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--cyan)">${total?Math.round(n/total*100):0}%</div>
+</div>
+`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+}
+
+function exportRapport() {
+const total = reservations.length;
+const termines = reservations.filter(r=>r.statut==='Terminé').length;
+const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+const txt = `RAPPORT ACCESS WASH\n${'='.repeat(30)}\nDate: ${new Date().toLocaleDateString('fr-FR')}\n\nTOTAL RÉSERVATIONS: ${total}\nTERMINÉES: ${termines}\nVIA WHATSAPP BOT: ${waBot}\nCLIENTS: ${clients.length}\nAGENTS: ${agents.length}\n\nRÉSERVATIONS:\n${reservations.map(r=>`- ${r.client} | ${r.service} | ${r.statut} | ${r.date}`).join('\n')}`;
+const blob = new Blob([txt], {type:'text/plain'});
+const a = document.createElement('a');
+a.href = URL.createObjectURL(blob);
+a.download = 'rapport-access-wash.txt';
+a.click();
+showToast('📥 Rapport exporté !', 'Fichier téléchargé avec succès');
+}
+
 function renderAll() {
 renderDashboard();
 renderReservations();
 renderClients();
 renderAgents();
 renderPaiements();
+renderRapports();
 renderWaContacts();
 if(activeConvId) openConv(activeConvId);
 }
