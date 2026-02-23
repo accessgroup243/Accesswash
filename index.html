@@ -7,24 +7,24 @@
 <title>Access Wash – Système Complet</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root {
---blue: #0047FF;
---cyan: #00C2FF;
---dark: #050A18;
---dark2: #0C1428;
---card: #101A30;
---border: rgba(255,255,255,0.08);
---text: #E8EDF8;
---muted: #6B7A99;
---green: #00E5A0;
---wa-green: #25D366;
---wa-dark: #128C7E;
---orange: #FF6B35;
---yellow: #FFD60A;
---red: #FF4757;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; display:flex; }
+ :root {
+ --blue: #0047FF;
+ --cyan: #00C2FF;
+ --dark: #050A18;
+ --dark2: #0C1428;
+ --card: #101A30;
+ --border: rgba(255,255,255,0.08);
+ --text: #E8EDF8;
+ --muted: #6B7A99;
+ --green: #00E5A0;
+ --wa-green: #25D366;
+ --wa-dark: #128C7E;
+ --orange: #FF6B35;
+ --yellow: #FFD60A;
+ --red: #FF4757;
+ }
+ * { margin:0; padding:0; box-sizing:border-box; }
+ body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; display:flex; }
 
 /* SIDEBAR */
 .sidebar {
@@ -196,6 +196,59 @@ box-shadow:0 8px 32px rgba(0,0,0,0.4);
 
 @media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
 
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+/* Cache sidebar, affiche bottom nav */
+.sidebar { display:none !important; }
+.main { margin-left:0 !important; padding:16px 12px 80px !important; }
+
+```
+/* Bottom navigation */
+.bottom-nav {
+ display:flex !important;
+ position:fixed; bottom:0; left:0; right:0;
+ background:var(--dark2);
+ border-top:1px solid var(--border);
+ z-index:100;
+ padding:8px 0 12px;
+}
+
+.page-title { font-size:20px !important; }
+.stats-grid { grid-template-columns:repeat(2,1fr) !important; gap:10px !important; }
+.stat-val { font-size:20px !important; }
+.card { padding:16px !important; }
+.table th, .table td { padding:8px 6px !important; font-size:11px !important; }
+.page-header { flex-direction:column; gap:12px; }
+.page-header .btn { width:100%; text-align:center; }
+.wa-panel { grid-template-columns:1fr !important; height:auto !important; }
+.wa-contacts { max-height:250px; }
+.modal { padding:20px 16px !important; }
+.form-row { grid-template-columns:1fr !important; }
+.grid-2 { grid-template-columns:1fr !important; }
+.login-box { padding:28px 20px !important; }
+```
+
+}
+
+/* Bottom nav (caché sur desktop) */
+.bottom-nav { display:none; }
+.bnav-item {
+flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+background:none; border:none; color:var(–muted); cursor:pointer;
+font-size:10px; font-family:‘DM Sans’,sans-serif; padding:4px;
+transition:color 0.2s;
+}
+.bnav-item.active { color:var(–cyan); }
+.bnav-icon { font-size:20px; }
+.bnav-badge {
+position:relative; display:inline-block;
+}
+.bnav-badge-dot {
+position:absolute; top:-2px; right:-2px;
+width:8px; height:8px; background:var(–orange);
+border-radius:50%; border:2px solid var(–dark2);
+}
+
 /* LOGIN */
 .login-screen {
 position:fixed; inset:0;
@@ -335,314 +388,314 @@ transition:0.2s;
 <!-- LOGIN SCREEN -->
 
 <div class="login-screen" id="login-screen">
-<div class="login-box">
-<div class="login-logo">🚗</div>
-<div class="login-title">Access Wash</div>
-<div class="login-sub">Kinshasa, RDC — Connexion sécurisée</div>
-<div class="login-form">
-<label class="login-label">Identifiant</label>
-<input class="login-input" id="login-user" placeholder="Ex: admin" onkeydown="if(event.key==='Enter')tryLogin()">
-<label class="login-label">Mot de passe</label>
-<input class="login-input" id="login-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
-<button class="login-btn" onclick="tryLogin()">🔐 Se connecter</button>
-<div class="login-error" id="login-error">❌ Identifiant ou mot de passe incorrect</div>
-</div>
-<div class="login-users">
-<div class="login-users-title">Connexion rapide</div>
-<div class="login-user-btns">
-<button class="login-user-btn" onclick="quickLogin('admin','admin123')">
-<div class="login-user-av" style="background:rgba(0,71,255,0.2);color:#00C2FF">AW</div>
-<div class="login-user-info"><div class="login-user-name">Admin Access</div><div class="login-user-role">Directeur</div></div>
-<div class="login-user-pass">admin123</div>
-</button>
-<button class="login-user-btn" onclick="quickLogin('agent1','agent123')">
-<div class="login-user-av" style="background:rgba(0,229,160,0.2);color:#00E5A0">PL</div>
-<div class="login-user-info"><div class="login-user-name">Patrick Lumu</div><div class="login-user-role">Agent</div></div>
-<div class="login-user-pass">agent123</div>
-</button>
-<button class="login-user-btn" onclick="quickLogin('agent2','agent456')">
-<div class="login-user-av" style="background:rgba(255,107,53,0.2);color:#FF6B35">GN</div>
-<div class="login-user-info"><div class="login-user-name">Grace Nkosi</div><div class="login-user-role">Agent</div></div>
-<div class="login-user-pass">agent456</div>
-</button>
-</div>
-</div>
-</div>
+ <div class="login-box">
+ <div class="login-logo"> </div>
+ <div class="login-title">Access Wash</div>
+ <div class="login-sub">Kinshasa, RDC — Connexion sécurisée</div>
+ <div class="login-form">
+ <label class="login-label">Identifiant</label>
+ <input class="login-input" id="login-user" placeholder="Ex: admin" onkeydown="if(event.key==='Enter')tryLogin()">
+ <label class="login-label">Mot de passe</label>
+ <input class="login-input" id="login-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+ <button class="login-btn" onclick="tryLogin()"> Se connecter</button>
+ <div class="login-error" id="login-error"> Identifiant ou mot de passe incorrect</div>
+ </div>
+ <div class="login-users">
+ <div class="login-users-title">Connexion rapide</div>
+ <div class="login-user-btns">
+ <button class="login-user-btn" onclick="quickLogin('admin','admin123')">
+ <div class="login-user-av" style="background:rgba(0,71,255,0.2);color:#00C2FF">AW</div>
+ <div class="login-user-info"><div class="login-user-name">Admin Access</div><div class="login-user-role">Directeur</div></div>
+ <div class="login-user-pass">admin123</div>
+ </button>
+ <button class="login-user-btn" onclick="quickLogin('agent1','agent123')">
+ <div class="login-user-av" style="background:rgba(0,229,160,0.2);color:#00E5A0">PL</div>
+ <div class="login-user-info"><div class="login-user-name">Patrick Lumu</div><div class="login-user-role">Agent</div></div>
+ <div class="login-user-pass">agent123</div>
+ </button>
+ <button class="login-user-btn" onclick="quickLogin('agent2','agent456')">
+ <div class="login-user-av" style="background:rgba(255,107,53,0.2);color:#FF6B35">GN</div>
+ <div class="login-user-info"><div class="login-user-name">Grace Nkosi</div><div class="login-user-role">Agent</div></div>
+ <div class="login-user-pass">agent456</div>
+ </button>
+ </div>
+ </div>
+ </div>
 </div>
 
 <!-- SIDEBAR -->
 
 <aside class="sidebar" id="sidebar-app" style="display:none">
-<div class="logo">
-<div class="logo-icon">🚗</div>
-<div class="logo-text">Access Wash <span>Kinshasa, RDC</span></div>
-</div>
+ <div class="logo">
+ <div class="logo-icon"> </div>
+ <div class="logo-text">Access Wash <span>Kinshasa, RDC</span></div>
+ </div>
 
-<div class="nav-label">Principal</div>
-<button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Tableau de bord</button>
-<button class="nav-btn" onclick="showPage('reservations',this)"><span class="nav-icon">📅</span>Réservations<span class="notif-dot" id="res-count">4</span></button>
-<button class="nav-btn" onclick="showPage('whatsapp',this)"><span class="nav-icon">💬</span>WhatsApp Bot<span class="live-dot"></span></button>
-<button class="nav-btn" onclick="showPage('clients',this)"><span class="nav-icon">👥</span>Clients</button>
-<button class="nav-btn" onclick="showPage('agents',this)"><span class="nav-icon">🧹</span>Agents</button>
+ <div class="nav-label">Principal</div>
+ <button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon"> </span>Tableau de bord</button>
+ <button class="nav-btn" onclick="showPage('reservations',this)"><span class="nav-icon"> </span>Réservations<span class="notif-dot" id="res-count">4</span></button>
+ <button class="nav-btn" onclick="showPage('whatsapp',this)"><span class="nav-icon"> </span>WhatsApp Bot<span class="live-dot"></span></button>
+ <button class="nav-btn" onclick="showPage('clients',this)"><span class="nav-icon"> </span>Clients</button>
+ <button class="nav-btn" onclick="showPage('agents',this)"><span class="nav-icon"> </span>Agents</button>
 
-<div class="nav-label">Finance</div>
-<button class="nav-btn" onclick="showPage('paiements',this)"><span class="nav-icon">💰</span>Paiements</button>
-<button class="nav-btn" onclick="showPage('rapports',this)"><span class="nav-icon">📊</span>Rapports</button>
+ <div class="nav-label">Finance</div>
+ <button class="nav-btn" onclick="showPage('paiements',this)"><span class="nav-icon"> </span>Paiements</button>
+ <button class="nav-btn" onclick="showPage('rapports',this)"><span class="nav-icon"> </span>Rapports</button>
 
-<div class="sidebar-footer">
-<div class="user-card">
-<div class="user-avatar" id="current-av">AW</div>
-<div class="user-info"><div class="user-name" id="current-name">Admin Access</div><div class="user-role" id="current-role">Directeur</div></div>
-</div>
-<button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
-</div>
+ <div class="sidebar-footer">
+ <div class="user-card">
+ <div class="user-avatar" id="current-av">AW</div>
+ <div class="user-info"><div class="user-name" id="current-name">Admin Access</div><div class="user-role" id="current-role">Directeur</div></div>
+ </div>
+ <button class="logout-btn" onclick="logout()"> Se déconnecter</button>
+ </div>
 </aside>
 
 <!-- MAIN -->
 
 <main class="main" id="main-app" style="display:none">
 
-<!-- DASHBOARD -->
+ <!-- DASHBOARD -->
 
-<div id="dashboard" class="page active">
-<div class="page-header">
-<div><div class="page-title">Tableau de bord 📊</div><div class="page-sub">Vue d'ensemble — Access Wash</div></div>
-<button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle Réservation</button>
-</div>
-<div class="stats-grid">
-<div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon">📅</div><div class="stat-val" id="stat-today">4</div><div class="stat-lbl">Réservations du jour</div><div class="stat-chg" style="color:var(--green)">↑ inclut WhatsApp</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon">✅</div><div class="stat-val" id="stat-done">8</div><div class="stat-lbl">Lavages terminés</div><div class="stat-chg" style="color:var(--green)">67% du jour</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--orange)"></div><div class="stat-icon">🤖</div><div class="stat-val" id="stat-bot">3</div><div class="stat-lbl">Via Bot WhatsApp</div><div class="stat-chg" style="color:var(--cyan)">Automatique IA</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon">💵</div><div class="stat-val">48 500 FC</div><div class="stat-lbl">Recettes du jour</div><div class="stat-chg" style="color:var(--green)">↑ +12%</div></div>
-</div>
-<div class="grid-2">
-<div class="card">
-<div class="card-title">Réservations récentes <span style="font-size:11px;color:var(--muted);font-weight:400">Aujourd'hui</span></div>
-<table class="table"><thead><tr><th>Client</th><th>Service</th><th>Agent</th><th>Heure</th><th>Source</th><th>Statut</th></tr></thead>
-<tbody id="dash-res-table"></tbody></table>
-</div>
-<div class="card">
-<div class="card-title">Agents actifs</div>
-<div id="dash-agents"></div>
-</div>
-</div>
-</div>
+ <div id="dashboard" class="page active">
+ <div class="page-header">
+ <div><div class="page-title">Tableau de bord </div><div class="page-sub">Vue d'ensemble — Access Wash</div></div>
+ <button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle Réservation</button>
+ </div>
+ <div class="stats-grid">
+ <div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon"> </div><div class="stat-val" id="stat-today">4</div><div class="stat-lbl">Réservations du jour</div><div class="stat-chg" style="color:var(--green)">↑ inclut WhatsApp</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon"> </div><div class="stat-val" id="stat-done">8</div><div class="stat-lbl">Lavages terminés</div><div class="stat-chg" style="color:var(--green)">67% du jour</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--orange)"></div><div class="stat-icon"> </div><div class="stat-val" id="stat-bot">3</div><div class="stat-lbl">Via Bot WhatsApp</div><div class="stat-chg" style="color:var(--cyan)">Automatique IA</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon"> </div><div class="stat-val">48 500 FC</div><div class="stat-lbl">Recettes du jour</div><div class="stat-chg" style="color:var(--green)">↑ +12%</div></div>
+ </div>
+ <div class="grid-2">
+ <div class="card">
+ <div class="card-title">Réservations récentes <span style="font-size:11px;color:var(--muted);font-weight:400">Aujourd'hui</span></div>
+ <table class="table"><thead><tr><th>Client</th><th>Service</th><th>Agent</th><th>Heure</th><th>Source</th><th>Statut</th></tr></thead>
+ <tbody id="dash-res-table"></tbody></table>
+ </div>
+ <div class="card">
+ <div class="card-title">Agents actifs</div>
+ <div id="dash-agents"></div>
+ </div>
+ </div>
+ </div>
 
-<!-- RESERVATIONS -->
+ <!-- RESERVATIONS -->
 
-<div id="reservations" class="page">
-<div class="page-header">
-<div><div class="page-title">Réservations 📅</div><div class="page-sub">Toutes les réservations</div></div>
-<button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle</button>
-</div>
-<div class="card">
-<table class="table"><thead><tr><th>ID</th><th>Client</th><th>Tél</th><th>Service</th><th>Agent</th><th>Date/Heure</th><th>Zone</th><th>Montant</th><th>Source</th><th>Statut</th><th>Action</th></tr></thead>
-<tbody id="res-table"></tbody></table>
-</div>
-</div>
+ <div id="reservations" class="page">
+ <div class="page-header">
+ <div><div class="page-title">Réservations </div><div class="page-sub">Toutes les réservations</div></div>
+ <button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle</button>
+ </div>
+ <div class="card">
+ <table class="table"><thead><tr><th>ID</th><th>Client</th><th>Tél</th><th>Service</th><th>Agent</th><th>Date/Heure</th><th>Zone</th><th>Montant</th><th>Source</th><th>Statut</th><th>Action</th></tr></thead>
+ <tbody id="res-table"></tbody></table>
+ </div>
+ </div>
 
-<!-- WHATSAPP BOT -->
+ <!-- WHATSAPP BOT -->
 
-<div id="whatsapp" class="page">
-<div class="page-header">
-<div><div class="page-title">💬 Bot WhatsApp IA</div><div class="page-sub" style="color:var(--wa-green)">🟢 En ligne — Répond automatiquement aux clients</div></div>
-<div style="display:flex;gap:8px;align-items:center">
-<span class="badge bg-wa">IA Connectée</span>
-<span class="badge bg-green" id="wa-res-count">3 réservations aujourd'hui</span>
-</div>
-</div>
-<div class="wa-panel">
-<div class="wa-contacts">
-<div class="wa-contacts-header">💬 Conversations <span class="badge bg-wa" style="margin-left:auto;font-size:10px" id="conv-count">4</span></div>
-<div id="contacts-list"></div>
-</div>
-<div class="wa-chat-area">
-<div id="wa-empty" class="empty-chat">
-<div class="empty-chat-icon">💬</div>
-<div>Sélectionnez une conversation</div>
-<div style="font-size:12px">pour voir les messages</div>
-</div>
-<div id="wa-active-chat" style="display:none;flex-direction:column;height:100%">
-<div class="wa-chat-header">
-<div class="contact-avatar" id="active-av" style="background:#0047FF20;color:#00C2FF">M</div>
-<div>
-<div class="wa-chat-name" id="active-name">Client</div>
-<div class="wa-chat-status">🤖 Géré par le bot</div>
-</div>
-<div class="wa-chat-actions">
-<button class="btn btn-ghost btn-sm" onclick="convertToReservation()">📅 Créer réservation</button>
-<button class="btn btn-ghost btn-sm" id="assign-btn" onclick="toggleAssign()">👤 Prendre en charge</button>
-</div>
-</div>
-<div class="wa-messages" id="wa-messages"></div>
-<div class="wa-input-area">
-<input class="wa-input" id="wa-msg-input" placeholder="Répondre manuellement..." onkeydown="if(event.key==='Enter')sendWaMsg()">
-<button class="wa-send-btn" onclick="sendWaMsg()">➤</button>
-</div>
-</div>
-</div>
-</div>
-</div>
+ <div id="whatsapp" class="page">
+ <div class="page-header">
+ <div><div class="page-title"> Bot WhatsApp IA</div><div class="page-sub" style="color:var(--wa-green)"> En ligne — Répond automatiquement aux clients</div></div>
+ <div style="display:flex;gap:8px;align-items:center">
+ <span class="badge bg-wa">IA Connectée</span>
+ <span class="badge bg-green" id="wa-res-count">3 réservations aujourd'hui</span>
+ </div>
+ </div>
+ <div class="wa-panel">
+ <div class="wa-contacts">
+ <div class="wa-contacts-header"> Conversations <span class="badge bg-wa" style="margin-left:auto;font-size:10px" id="conv-count">4</span></div>
+ <div id="contacts-list"></div>
+ </div>
+ <div class="wa-chat-area">
+ <div id="wa-empty" class="empty-chat">
+ <div class="empty-chat-icon"> </div>
+ <div>Sélectionnez une conversation</div>
+ <div style="font-size:12px">pour voir les messages</div>
+ </div>
+ <div id="wa-active-chat" style="display:none;flex-direction:column;height:100%">
+ <div class="wa-chat-header">
+ <div class="contact-avatar" id="active-av" style="background:#0047FF20;color:#00C2FF">M</div>
+ <div>
+ <div class="wa-chat-name" id="active-name">Client</div>
+ <div class="wa-chat-status"> Géré par le bot</div>
+ </div>
+ <div class="wa-chat-actions">
+ <button class="btn btn-ghost btn-sm" onclick="convertToReservation()"> Créer réservation</button>
+ <button class="btn btn-ghost btn-sm" id="assign-btn" onclick="toggleAssign()"> Prendre en charge</button>
+ </div>
+ </div>
+ <div class="wa-messages" id="wa-messages"></div>
+ <div class="wa-input-area">
+ <input class="wa-input" id="wa-msg-input" placeholder="Répondre manuellement..." onkeydown="if(event.key==='Enter')sendWaMsg()">
+ <button class="wa-send-btn" onclick="sendWaMsg()">➤</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
 
-<!-- CLIENTS -->
+ <!-- CLIENTS -->
 
-<div id="clients" class="page">
-<div class="page-header">
-<div><div class="page-title">Clients 👥</div><div class="page-sub">Base de données</div></div>
-<button class="btn btn-primary" onclick="openModal('modal-client')">+ Nouveau</button>
-</div>
-<div class="card">
-<table class="table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Zone</th><th>Réservations</th><th>Total</th><th>Source</th><th>Statut</th></tr></thead>
-<tbody id="cli-table"></tbody></table>
-</div>
-</div>
+ <div id="clients" class="page">
+ <div class="page-header">
+ <div><div class="page-title">Clients </div><div class="page-sub">Base de données</div></div>
+ <button class="btn btn-primary" onclick="openModal('modal-client')">+ Nouveau</button>
+ </div>
+ <div class="card">
+ <table class="table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Zone</th><th>Réservations</th><th>Total</th><th>Source</th><th>Statut</th></tr></thead>
+ <tbody id="cli-table"></tbody></table>
+ </div>
+ </div>
 
-<!-- AGENTS -->
+ <!-- AGENTS -->
 
-<div id="agents" class="page">
-<div class="page-header">
-<div><div class="page-title">Agents 🧹</div><div class="page-sub">Gérer l'équipe</div></div>
-<button class="btn btn-primary" onclick="openModal('modal-agent')">+ Nouvel Agent</button>
-</div>
-<div class="card">
-<table class="table"><thead><tr><th>Agent</th><th>Tél</th><th>Zone</th><th>Lavages</th><th>Note</th><th>Statut</th></tr></thead>
-<tbody id="age-table"></tbody></table>
-</div>
-</div>
+ <div id="agents" class="page">
+ <div class="page-header">
+ <div><div class="page-title">Agents </div><div class="page-sub">Gérer l'équipe</div></div>
+ <button class="btn btn-primary" onclick="openModal('modal-agent')">+ Nouvel Agent</button>
+ </div>
+ <div class="card">
+ <table class="table"><thead><tr><th>Agent</th><th>Tél</th><th>Zone</th><th>Lavages</th><th>Note</th><th>Statut</th></tr></thead>
+ <tbody id="age-table"></tbody></table>
+ </div>
+ </div>
 
-<!-- PAIEMENTS -->
+ <!-- PAIEMENTS -->
 
-<div id="paiements" class="page">
-<div class="page-header"><div><div class="page-title">Paiements 💰</div><div class="page-sub">Suivi des recettes</div></div></div>
-<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
-<div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val">324 000 FC</div><div class="stat-lbl">Ce mois</div></div>
-<div class="stat-card"><div class="stat-icon">💳</div><div class="stat-val">47</div><div class="stat-lbl">Paiements reçus</div></div>
-<div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val">15 000 FC</div><div class="stat-lbl">En attente</div></div>
-</div>
-<div class="card">
-<table class="table"><thead><tr><th>Client</th><th>Service</th><th>Montant</th><th>Méthode</th><th>Date</th><th>Statut</th></tr></thead>
-<tbody id="pay-table"></tbody></table>
-</div>
-</div>
-<!-- RAPPORTS -->
-<div id="rapports" class="page">
-<div class="page-header">
-<div><div class="page-title">Rapports 📊</div><div class="page-sub">Statistiques et analyses Access Wash</div></div>
-<button class="btn btn-primary" onclick="exportRapport()">📥 Exporter</button>
-</div>
+ <div id="paiements" class="page">
+ <div class="page-header"><div><div class="page-title">Paiements </div><div class="page-sub">Suivi des recettes</div></div></div>
+ <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+ <div class="stat-card"><div class="stat-icon"> </div><div class="stat-val">324 000 FC</div><div class="stat-lbl">Ce mois</div></div>
+ <div class="stat-card"><div class="stat-icon"> </div><div class="stat-val">47</div><div class="stat-lbl">Paiements reçus</div></div>
+ <div class="stat-card"><div class="stat-icon"> </div><div class="stat-val">15 000 FC</div><div class="stat-lbl">En attente</div></div>
+ </div>
+ <div class="card">
+ <table class="table"><thead><tr><th>Client</th><th>Service</th><th>Montant</th><th>Méthode</th><th>Date</th><th>Statut</th></tr></thead>
+ <tbody id="pay-table"></tbody></table>
+ </div>
+ </div>
+ <!-- RAPPORTS -->
+ <div id="rapports" class="page">
+ <div class="page-header">
+ <div><div class="page-title">Rapports </div><div class="page-sub">Statistiques et analyses Access Wash</div></div>
+ <button class="btn btn-primary" onclick="exportRapport()"> Exporter</button>
+ </div>
 
 ```
 <!-- STATS PRINCIPALES -->
 <div class="stats-grid" style="margin-bottom:20px" id="rap-stats"></div>
 
 <div class="grid-2">
-<!-- SERVICES -->
-<div class="card">
-<div class="card-title">🚗 Réservations par service</div>
-<div id="rap-services"></div>
-</div>
+ <!-- SERVICES -->
+ <div class="card">
+ <div class="card-title"> Réservations par service</div>
+ <div id="rap-services"></div>
+ </div>
 
-<!-- AGENTS -->
-<div class="card">
-<div class="card-title">🧹 Performance des agents</div>
-<div id="rap-agents"></div>
-</div>
+ <!-- AGENTS -->
+ <div class="card">
+ <div class="card-title"> Performance des agents</div>
+ <div id="rap-agents"></div>
+ </div>
 </div>
 
 <div style="margin-top:18px" class="grid-2">
-<!-- ZONES -->
-<div class="card">
-<div class="card-title">📍 Réservations par zone</div>
-<div id="rap-zones"></div>
-</div>
+ <!-- ZONES -->
+ <div class="card">
+ <div class="card-title"> Réservations par zone</div>
+ <div id="rap-zones"></div>
+ </div>
 
-<!-- SOURCES -->
-<div class="card">
-<div class="card-title">📱 Source des réservations</div>
-<div id="rap-sources"></div>
-</div>
+ <!-- SOURCES -->
+ <div class="card">
+ <div class="card-title"> Source des réservations</div>
+ <div id="rap-sources"></div>
+ </div>
 </div>
 ```
 
-</div>
+ </div>
 
 </main>
 
 <!-- TOAST NOTIFICATION -->
 
 <div class="toast" id="toast">
-<div class="toast-icon">💬</div>
-<div>
-<div class="toast-title" id="toast-title">Nouveau message WhatsApp</div>
-<div class="toast-body" id="toast-body">Un client vient de contacter le bot</div>
-<div class="toast-source">🤖 Via Bot WhatsApp IA</div>
-</div>
+ <div class="toast-icon"> </div>
+ <div>
+ <div class="toast-title" id="toast-title">Nouveau message WhatsApp</div>
+ <div class="toast-body" id="toast-body">Un client vient de contacter le bot</div>
+ <div class="toast-source"> Via Bot WhatsApp IA</div>
+ </div>
 </div>
 
 <!-- MODAL RESERVATION -->
 
 <div class="modal-overlay" id="modal-res">
-<div class="modal">
-<div class="modal-title">📅 Nouvelle Réservation</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">Nom client</label><input class="form-input" id="r-nom" placeholder="Nom complet"></div>
-<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="r-tel" placeholder="+243..."></div>
-</div>
-<div class="form-group"><label class="form-label">Service</label>
-<select class="form-input" id="r-service"><option>Lavage simple — 4 000 FC</option><option>Lavage complet — 7 000 FC</option><option>Intérieur + Extérieur — 10 000 FC</option><option>Cire & Polissage — 15 000 FC</option></select>
-</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">Date</label><input class="form-input" id="r-date" type="date"></div>
-<div class="form-group"><label class="form-label">Heure</label><input class="form-input" id="r-heure" type="time"></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="r-zone" placeholder="Quartier"></div>
-<div class="form-group"><label class="form-label">Agent</label>
-<select class="form-input" id="r-agent"><option>Patrick Lumu</option><option>Grace Nkosi</option><option>Didier Mbemba</option><option>Ange Mukendi</option><option>Serge Bope</option></select>
-</div>
-</div>
-<div class="form-group"><label class="form-label">Source</label>
-<select class="form-input" id="r-source"><option>Manuel</option><option>WhatsApp Bot</option><option>Appel téléphonique</option></select>
-</div>
-<div class="modal-actions">
-<button class="btn btn-ghost" onclick="closeModal('modal-res')">Annuler</button>
-<button class="btn btn-primary" onclick="addReservation()">Confirmer ✓</button>
-</div>
-</div>
+ <div class="modal">
+ <div class="modal-title"> Nouvelle Réservation</div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Nom client</label><input class="form-input" id="r-nom" placeholder="Nom complet"></div>
+ <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="r-tel" placeholder="+243..."></div>
+ </div>
+ <div class="form-group"><label class="form-label">Service</label>
+ <select class="form-input" id="r-service"><option>Lavage simple — 4 000 FC</option><option>Lavage complet — 7 000 FC</option><option>Intérieur + Extérieur — 10 000 FC</option><option>Cire & Polissage — 15 000 FC</option></select>
+ </div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Date</label><input class="form-input" id="r-date" type="date"></div>
+ <div class="form-group"><label class="form-label">Heure</label><input class="form-input" id="r-heure" type="time"></div>
+ </div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="r-zone" placeholder="Quartier"></div>
+ <div class="form-group"><label class="form-label">Agent</label>
+ <select class="form-input" id="r-agent"><option>Patrick Lumu</option><option>Grace Nkosi</option><option>Didier Mbemba</option><option>Ange Mukendi</option><option>Serge Bope</option></select>
+ </div>
+ </div>
+ <div class="form-group"><label class="form-label">Source</label>
+ <select class="form-input" id="r-source"><option>Manuel</option><option>WhatsApp Bot</option><option>Appel téléphonique</option></select>
+ </div>
+ <div class="modal-actions">
+ <button class="btn btn-ghost" onclick="closeModal('modal-res')">Annuler</button>
+ <button class="btn btn-primary" onclick="addReservation()">Confirmer ✓</button>
+ </div>
+ </div>
 </div>
 
 <!-- MODAL CLIENT -->
 
 <div class="modal-overlay" id="modal-client">
-<div class="modal">
-<div class="modal-title">👤 Nouveau Client</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="c-nom" placeholder="Nom complet"></div>
-<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="c-tel" placeholder="+243..."></div>
-</div>
-<div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="c-zone" placeholder="Quartier"></div>
-<div class="modal-actions">
-<button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
-<button class="btn btn-primary" onclick="addClient()">Ajouter ✓</button>
-</div>
-</div>
+ <div class="modal">
+ <div class="modal-title"> Nouveau Client</div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="c-nom" placeholder="Nom complet"></div>
+ <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="c-tel" placeholder="+243..."></div>
+ </div>
+ <div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="c-zone" placeholder="Quartier"></div>
+ <div class="modal-actions">
+ <button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
+ <button class="btn btn-primary" onclick="addClient()">Ajouter ✓</button>
+ </div>
+ </div>
 </div>
 
 <!-- MODAL AGENT -->
 
 <div class="modal-overlay" id="modal-agent">
-<div class="modal">
-<div class="modal-title">🧹 Nouvel Agent</div>
-<div class="form-row">
-<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="a-nom" placeholder="Nom complet"></div>
-<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="a-tel" placeholder="+243..."></div>
-</div>
-<div class="form-group"><label class="form-label">Zone assignée</label><input class="form-input" id="a-zone" placeholder="Ex: Gombe, Lemba..."></div>
-<div class="modal-actions">
-<button class="btn btn-ghost" onclick="closeModal('modal-agent')">Annuler</button>
-<button class="btn btn-primary" onclick="addAgent()">Ajouter ✓</button>
-</div>
-</div>
+ <div class="modal">
+ <div class="modal-title"> Nouvel Agent</div>
+ <div class="form-row">
+ <div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="a-nom" placeholder="Nom complet"></div>
+ <div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="a-tel" placeholder="+243..."></div>
+ </div>
+ <div class="form-group"><label class="form-label">Zone assignée</label><input class="form-input" id="a-zone" placeholder="Ex: Gombe, Lemba..."></div>
+ <div class="modal-actions">
+ <button class="btn btn-ghost" onclick="closeModal('modal-agent')">Annuler</button>
+ <button class="btn btn-primary" onclick="addAgent()">Ajouter ✓</button>
+ </div>
+ </div>
 </div>
 
 <script>
@@ -654,362 +707,369 @@ let paiements = [];
 
 // WhatsApp conversations
 let waConversations = [
-{
-id:1, name:'Patient Ngoy', tel:'+243 898 765 432', color:'#00E5A0', initials:'PN', unread:0, managed:false,
-messages:[
-{from:'client',text:'Bonjour, je voudrais laver ma voiture',time:'09:45'},
-{from:'bot',text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nJe peux vous aider avec :\n1️⃣ Réservation\n2️⃣ Tarifs\n3️⃣ Suivi\n4️⃣ Agent humain',time:'09:45'},
-{from:'client',text:'2 tarifs',time:'09:46'},
-{from:'bot',text:'Nos tarifs 💰 :\n🚿 Lavage simple — 4 000 FC\n🚗 Lavage complet — 7 000 FC\n✨ Intérieur + Extérieur — 10 000 FC\n💎 Cire & Polissage — 15 000 FC\n📅 Forfait mensuel — 25 000 FC',time:'09:46'},
-{from:'client',text:'Ok je prends lavage simple',time:'09:47'},
-{from:'bot',text:'Super ! 📅 Pour votre réservation, quel est votre quartier ?',time:'09:47'},
-{from:'client',text:'Lemba',time:'09:48'},
-{from:'bot',text:'Parfait ! Quelle date et heure vous convient ?',time:'09:48'},
-{from:'client',text:'Aujourd\'hui à 10h',time:'09:49'},
-{from:'bot',text:'✅ Réservation confirmée !\n\n👤 Patient Ngoy\n📍 Lemba\n🚿 Lavage simple — 4 000 FC\n🕐 Aujourd\'hui à 10h00\n\nUn agent sera chez vous à l\'heure dite ! 🙏',time:'09:49',isRes:true},
-]
-},
-{
-id:2, name:'Divine Mutombo', tel:'+243 823 111 222', color:'#FF6B35', initials:'DM', unread:2, managed:false,
-messages:[
-{from:'client',text:'Bonjour Access Wash',time:'10:30'},
-{from:'bot',text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nComment puis-je vous aider ?',time:'10:30'},
-{from:'client',text:'Je veux la cire et polissage',time:'10:32'},
-{from:'bot',text:'Excellent choix ! 💎 La Cire & Polissage est à 15 000 FC.\n\nVotre quartier ?',time:'10:32'},
-{from:'client',text:'Matete, demain matin 9h',time:'10:33'},
-{from:'bot',text:'✅ Réservation créée !\n\n👤 Divine Mutombo\n📍 Matete\n💎 Cire & Polissage — 15 000 FC\n🕐 Demain à 09h00\n\nMerci de votre confiance ! 🙏',time:'10:33',isRes:true},
-]
-},
-{
-id:3, name:'Espoir Kabila', tel:'+243 845 999 888', color:'#FFD60A', initials:'EK', unread:1, managed:false,
-messages:[
-{from:'client',text:'Bonjour, vous faites quelles zones ?',time:'11:00'},
-{from:'bot',text:'Bonjour ! 😊 Nous couvrons toute la ville de Kinshasa !\n\nGombe, Lemba, Matete, Ngaliema, Kalamu, Kintambo et bien plus encore.\n\nVoulez-vous faire une réservation ?',time:'11:00'},
-{from:'client',text:'Oui s\'il vous plaît',time:'11:05'},
-{from:'client',text:'Lavage complet à Ngaliema',time:'11:05'},
-]
-},
-{
-id:4, name:'Grâce Mwamba', tel:'+243 870 123 456', color:'#00C2FF', initials:'GM', unread:0, managed:true,
-messages:[
-{from:'client',text:'Bonjour, j\'ai un problème avec mon agent',time:'08:15'},
-{from:'bot',text:'Bonjour ! Je vous mets en contact avec un agent humain...',time:'08:15'},
-{from:'admin',text:'Bonjour Grâce ! Je suis l\'admin Access Wash. Quel est le problème ?',time:'08:16'},
-{from:'client',text:'L\'agent n\'est pas encore arrivé après 1 heure',time:'08:17'},
-{from:'admin',text:'Nous nous excusons pour ce retard. Je contacte l\'agent immédiatement et vous rappelle dans 5 minutes.',time:'08:18'},
-{from:'client',text:'Merci',time:'08:18'},
-]
-},
+ {
+ id:1, name:'Patient Ngoy', tel:'+243 898 765 432', color:'#00E5A0', initials:'PN', unread:0, managed:false,
+ messages:[
+ {from:'client',text:'Bonjour, je voudrais laver ma voiture',time:'09:45'},
+ {from:'bot',text:'Bonjour ! Bienvenue chez Access Wash \n\nJe peux vous aider avec :\n Réservation\n Tarifs\n Suivi\n Agent humain',time:'09:45'},
+ {from:'client',text:'2 tarifs',time:'09:46'},
+ {from:'bot',text:'Nos tarifs :\n Lavage simple — 4 000 FC\n Lavage complet — 7 000 FC\n Intérieur + Extérieur — 10 000 FC\n Cire & Polissage — 15 000 FC\n Forfait mensuel — 25 000 FC',time:'09:46'},
+ {from:'client',text:'Ok je prends lavage simple',time:'09:47'},
+ {from:'bot',text:'Super ! Pour votre réservation, quel est votre quartier ?',time:'09:47'},
+ {from:'client',text:'Lemba',time:'09:48'},
+ {from:'bot',text:'Parfait ! Quelle date et heure vous convient ?',time:'09:48'},
+ {from:'client',text:'Aujourd\'hui à 10h',time:'09:49'},
+ {from:'bot',text:' Réservation confirmée !\n\n Patient Ngoy\n Lemba\n Lavage simple — 4 000 FC\n Aujourd\'hui à 10h00\n\nUn agent sera chez vous à l\'heure dite ! ',time:'09:49',isRes:true},
+ ]
+ },
+ {
+ id:2, name:'Divine Mutombo', tel:'+243 823 111 222', color:'#FF6B35', initials:'DM', unread:2, managed:false,
+ messages:[
+ {from:'client',text:'Bonjour Access Wash',time:'10:30'},
+ {from:'bot',text:'Bonjour ! Bienvenue chez Access Wash \n\nComment puis-je vous aider ?',time:'10:30'},
+ {from:'client',text:'Je veux la cire et polissage',time:'10:32'},
+ {from:'bot',text:'Excellent choix ! La Cire & Polissage est à 15 000 FC.\n\nVotre quartier ?',time:'10:32'},
+ {from:'client',text:'Matete, demain matin 9h',time:'10:33'},
+ {from:'bot',text:' Réservation créée !\n\n Divine Mutombo\n Matete\n Cire & Polissage — 15 000 FC\n Demain à 09h00\n\nMerci de votre confiance ! ',time:'10:33',isRes:true},
+ ]
+ },
+ {
+ id:3, name:'Espoir Kabila', tel:'+243 845 999 888', color:'#FFD60A', initials:'EK', unread:1, managed:false,
+ messages:[
+ {from:'client',text:'Bonjour, vous faites quelles zones ?',time:'11:00'},
+ {from:'bot',text:'Bonjour ! Nous couvrons toute la ville de Kinshasa !\n\nGombe, Lemba, Matete, Ngaliema, Kalamu, Kintambo et bien plus encore.\n\nVoulez-vous faire une réservation ?',time:'11:00'},
+ {from:'client',text:'Oui s\'il vous plaît',time:'11:05'},
+ {from:'client',text:'Lavage complet à Ngaliema',time:'11:05'},
+ ]
+ },
+ {
+ id:4, name:'Grâce Mwamba', tel:'+243 870 123 456', color:'#00C2FF', initials:'GM', unread:0, managed:true,
+ messages:[
+ {from:'client',text:'Bonjour, j\'ai un problème avec mon agent',time:'08:15'},
+ {from:'bot',text:'Bonjour ! Je vous mets en contact avec un agent humain...',time:'08:15'},
+ {from:'admin',text:'Bonjour Grâce ! Je suis l\'admin Access Wash. Quel est le problème ?',time:'08:16'},
+ {from:'client',text:'L\'agent n\'est pas encore arrivé après 1 heure',time:'08:17'},
+ {from:'admin',text:'Nous nous excusons pour ce retard. Je contacte l\'agent immédiatement et vous rappelle dans 5 minutes.',time:'08:18'},
+ {from:'client',text:'Merci',time:'08:18'},
+ ]
+ },
 ];
 
 let activeConvId = null;
 let humanTakenOver = false;
 
+// ============ NAVIGATION MOBILE ============
+function showPageMobile(id, btn) {
+ showPage(id, null);
+ document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+ if(btn) btn.classList.add('active');
+}
+
 // ============ NAVIGATION ============
 function showPage(id, btn) {
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-if(btn) btn.classList.add('active');
-renderAll();
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ if(btn) btn.classList.add('active');
+ renderAll();
 }
 
 // ============ BADGES ============
 function badge(s) {
-const m = {
-'Terminé':'bg-green','En cours':'bg-blue','En attente':'bg-yellow','Annulé':'bg-red',
-'Payé':'bg-green','VIP':'bg-blue','Actif':'bg-green','Nouveau':'bg-yellow',
-'Disponible':'bg-green','En mission':'bg-orange',
-'WhatsApp Bot':'bg-wa','Manuel':'bg-blue','WhatsApp':'bg-wa','Appel téléphonique':'bg-yellow'
-};
-return `<span class="badge ${m[s]||'bg-yellow'}">${s}</span>`;
+ const m = {
+ 'Terminé':'bg-green','En cours':'bg-blue','En attente':'bg-yellow','Annulé':'bg-red',
+ 'Payé':'bg-green','VIP':'bg-blue','Actif':'bg-green','Nouveau':'bg-yellow',
+ 'Disponible':'bg-green','En mission':'bg-orange',
+ 'WhatsApp Bot':'bg-wa','Manuel':'bg-blue','WhatsApp':'bg-wa','Appel téléphonique':'bg-yellow'
+ };
+ return `<span class="badge ${m[s]||'bg-yellow'}">${s}</span>`;
 }
 
 function getTime() { return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
 
 // ============ RENDER ============
 function renderDashboard() {
-document.getElementById('stat-today').textContent = reservations.length;
-const botCount = reservations.filter(r=>r.source==='WhatsApp Bot').length;
-document.getElementById('stat-bot').textContent = botCount;
+ document.getElementById('stat-today').textContent = reservations.length;
+ const botCount = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+ document.getElementById('stat-bot').textContent = botCount;
 
-const tb = document.getElementById('dash-res-table');
-if(tb) tb.innerHTML = reservations.slice(0,5).map(r=>`<tr>
-<td><strong>${r.client}</strong></td>
-<td>${r.service}</td>
-<td>${r.agent}</td>
-<td>${r.heure}</td>
-<td>${badge(r.source)}</td>
-<td>${badge(r.statut)}</td>
-</tr>`).join('');
+ const tb = document.getElementById('dash-res-table');
+ if(tb) tb.innerHTML = reservations.slice(0,5).map(r=>`<tr>
+ <td><strong>${r.client}</strong></td>
+ <td>${r.service}</td>
+ <td>${r.agent}</td>
+ <td>${r.heure}</td>
+ <td>${badge(r.source)}</td>
+ <td>${badge(r.statut)}</td>
+ </tr>`).join('');
 
-const ag = document.getElementById('dash-agents');
-if(ag) ag.innerHTML = agents.map(a=>`<div class="agent-row">
-<div class="agent-av" style="background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div>
-<div class="agent-inf"><div class="agent-nm">${a.nom}</div><div class="agent-zn">${a.zone}</div></div>
-${badge(a.statut)}
-</div>`).join('');
+ const ag = document.getElementById('dash-agents');
+ if(ag) ag.innerHTML = agents.map(a=>`<div class="agent-row">
+ <div class="agent-av" style="background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div>
+ <div class="agent-inf"><div class="agent-nm">${a.nom}</div><div class="agent-zn">${a.zone}</div></div>
+ ${badge(a.statut)}
+ </div>`).join('');
 }
 
 function renderReservations() {
-const tb = document.getElementById('res-table');
-if(!tb) return;
-tb.innerHTML = reservations.map((r,i)=>`<tr>
-<td style="color:var(--muted);font-size:11px">${r.id}</td>
-<td><strong>${r.client}</strong></td>
-<td style="color:var(--muted)">${r.tel}</td>
-<td>${r.service}</td>
-<td>${r.agent}</td>
-<td>${r.date} ${r.heure}</td>
-<td>${r.zone}</td>
-<td style="color:var(--green);font-weight:600">${r.montant} FC</td>
-<td>${badge(r.source)}</td>
-<td>${badge(r.statut)}</td>
-<td><button class="btn btn-ghost btn-sm" onclick="delRes(${i})">✕</button></td>
-</tr>`).join('');
-document.getElementById('res-count').textContent = reservations.filter(r=>r.statut==='En attente').length;
+ const tb = document.getElementById('res-table');
+ if(!tb) return;
+ tb.innerHTML = reservations.map((r,i)=>`<tr>
+ <td style="color:var(--muted);font-size:11px">${r.id}</td>
+ <td><strong>${r.client}</strong></td>
+ <td style="color:var(--muted)">${r.tel}</td>
+ <td>${r.service}</td>
+ <td>${r.agent}</td>
+ <td>${r.date} ${r.heure}</td>
+ <td>${r.zone}</td>
+ <td style="color:var(--green);font-weight:600">${r.montant} FC</td>
+ <td>${badge(r.source)}</td>
+ <td>${badge(r.statut)}</td>
+ <td><button class="btn btn-ghost btn-sm" onclick="delRes(${i})">✕</button></td>
+ </tr>`).join('');
+ document.getElementById('res-count').textContent = reservations.filter(r=>r.statut==='En attente').length;
 }
 
 function renderClients() {
-const tb = document.getElementById('cli-table');
-if(!tb) return;
-tb.innerHTML = clients.map(c=>`<tr>
-<td><strong>${c.nom}</strong></td>
-<td style="color:var(--muted)">${c.tel}</td>
-<td>${c.zone}</td>
-<td style="text-align:center">${c.reservations}</td>
-<td style="color:var(--green);font-weight:600">${c.total}</td>
-<td>${badge(c.source||'Manuel')}</td>
-<td>${badge(c.statut)}</td>
-</tr>`).join('');
+ const tb = document.getElementById('cli-table');
+ if(!tb) return;
+ tb.innerHTML = clients.map(c=>`<tr>
+ <td><strong>${c.nom}</strong></td>
+ <td style="color:var(--muted)">${c.tel}</td>
+ <td>${c.zone}</td>
+ <td style="text-align:center">${c.reservations}</td>
+ <td style="color:var(--green);font-weight:600">${c.total}</td>
+ <td>${badge(c.source||'Manuel')}</td>
+ <td>${badge(c.statut)}</td>
+ </tr>`).join('');
 }
 
 function renderAgents() {
-const tb = document.getElementById('age-table');
-if(!tb) return;
-tb.innerHTML = agents.map(a=>`<tr>
-<td><div style="display:flex;align-items:center;gap:10px"><div class="agent-av" style="width:30px;height:30px;font-size:11px;background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div><strong>${a.nom}</strong></div></td>
-<td style="color:var(--muted)">${a.tel}</td>
-<td>${a.zone}</td>
-<td>${a.lavages}</td>
-<td>${a.note}</td>
-<td>${badge(a.statut)}</td>
-</tr>`).join('');
+ const tb = document.getElementById('age-table');
+ if(!tb) return;
+ tb.innerHTML = agents.map(a=>`<tr>
+ <td><div style="display:flex;align-items:center;gap:10px"><div class="agent-av" style="width:30px;height:30px;font-size:11px;background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div><strong>${a.nom}</strong></div></td>
+ <td style="color:var(--muted)">${a.tel}</td>
+ <td>${a.zone}</td>
+ <td>${a.lavages}</td>
+ <td>${a.note}</td>
+ <td>${badge(a.statut)}</td>
+ </tr>`).join('');
 }
 
 function renderPaiements() {
-const tb = document.getElementById('pay-table');
-if(!tb) return;
-tb.innerHTML = paiements.map(p=>`<tr>
-<td><strong>${p.client}</strong></td>
-<td>${p.service}</td>
-<td style="color:var(--green);font-weight:600">${p.montant}</td>
-<td>${p.methode}</td>
-<td style="color:var(--muted)">${p.date}</td>
-<td>${badge(p.statut)}</td>
-</tr>`).join('');
+ const tb = document.getElementById('pay-table');
+ if(!tb) return;
+ tb.innerHTML = paiements.map(p=>`<tr>
+ <td><strong>${p.client}</strong></td>
+ <td>${p.service}</td>
+ <td style="color:var(--green);font-weight:600">${p.montant}</td>
+ <td>${p.methode}</td>
+ <td style="color:var(--muted)">${p.date}</td>
+ <td>${badge(p.statut)}</td>
+ </tr>`).join('');
 }
 
 function renderWaContacts() {
-const list = document.getElementById('contacts-list');
-if(!list) return;
-list.innerHTML = waConversations.map(c=>`
-<div class="contact-item ${activeConvId===c.id?'active':''}" onclick="openConv(${c.id})">
-<div class="contact-avatar" style="background:${c.color}20;color:${c.color}">${c.initials}</div>
-<div class="contact-info">
-<div class="contact-name">${c.name} ${c.managed?'<span style="font-size:10px;color:var(--cyan)">👤</span>':''}</div>
-<div class="contact-preview">${c.messages[c.messages.length-1]?.text?.substring(0,32)||''}...</div>
-</div>
-<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-<div class="contact-time">${c.messages[c.messages.length-1]?.time||''}</div>
-${c.unread>0?`<div class="contact-unread">${c.unread}</div>`:''}
-</div>
-</div>
-`).join('');
-document.getElementById('conv-count').textContent = waConversations.length;
-const waRes = waConversations.reduce((acc,c)=>acc+c.messages.filter(m=>m.isRes).length,0);
-document.getElementById('wa-res-count').textContent = `${waRes} réservations aujourd'hui`;
+ const list = document.getElementById('contacts-list');
+ if(!list) return;
+ list.innerHTML = waConversations.map(c=>`
+ <div class="contact-item ${activeConvId===c.id?'active':''}" onclick="openConv(${c.id})">
+ <div class="contact-avatar" style="background:${c.color}20;color:${c.color}">${c.initials}</div>
+ <div class="contact-info">
+ <div class="contact-name">${c.name} ${c.managed?'<span style="font-size:10px;color:var(--cyan)"> </span>':''}</div>
+ <div class="contact-preview">${c.messages[c.messages.length-1]?.text?.substring(0,32)||''}...</div>
+ </div>
+ <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+ <div class="contact-time">${c.messages[c.messages.length-1]?.time||''}</div>
+ ${c.unread>0?`<div class="contact-unread">${c.unread}</div>`:''}
+ </div>
+ </div>
+ `).join('');
+ document.getElementById('conv-count').textContent = waConversations.length;
+ const waRes = waConversations.reduce((acc,c)=>acc+c.messages.filter(m=>m.isRes).length,0);
+ document.getElementById('wa-res-count').textContent = `${waRes} réservations aujourd'hui`;
 }
 
 function openConv(id) {
-activeConvId = id;
-const conv = waConversations.find(c=>c.id===id);
-if(!conv) return;
-conv.unread = 0;
-humanTakenOver = conv.managed;
+ activeConvId = id;
+ const conv = waConversations.find(c=>c.id===id);
+ if(!conv) return;
+ conv.unread = 0;
+ humanTakenOver = conv.managed;
 
-document.getElementById('wa-empty').style.display = 'none';
-const activeChat = document.getElementById('wa-active-chat');
-activeChat.style.display = 'flex';
+ document.getElementById('wa-empty').style.display = 'none';
+ const activeChat = document.getElementById('wa-active-chat');
+ activeChat.style.display = 'flex';
 
-document.getElementById('active-name').textContent = conv.name;
-document.getElementById('active-av').textContent = conv.initials;
-document.getElementById('active-av').style.background = conv.color + '20';
-document.getElementById('active-av').style.color = conv.color;
-document.getElementById('assign-btn').textContent = conv.managed ? '🤖 Remettre au bot' : '👤 Prendre en charge';
+ document.getElementById('active-name').textContent = conv.name;
+ document.getElementById('active-av').textContent = conv.initials;
+ document.getElementById('active-av').style.background = conv.color + '20';
+ document.getElementById('active-av').style.color = conv.color;
+ document.getElementById('assign-btn').textContent = conv.managed ? ' Remettre au bot' : ' Prendre en charge';
 
-renderMessages(conv);
-renderWaContacts();
+ renderMessages(conv);
+ renderWaContacts();
 }
 
 function renderMessages(conv) {
-const container = document.getElementById('wa-messages');
-container.innerHTML = conv.messages.map(m=>{
-let cls = 'wa-msg-in';
-let label = '';
-if(m.from==='bot') { cls='wa-msg-bot'; label='<div class="wa-msg-label">🤖 Bot IA</div>'; }
-else if(m.from==='admin') { cls='wa-msg-out'; }
-else if(m.from==='client') { cls='wa-msg-in'; }
+ const container = document.getElementById('wa-messages');
+ container.innerHTML = conv.messages.map(m=>{
+ let cls = 'wa-msg-in';
+ let label = '';
+ if(m.from==='bot') { cls='wa-msg-bot'; label='<div class="wa-msg-label"> Bot IA</div>'; }
+ else if(m.from==='admin') { cls='wa-msg-out'; }
+ else if(m.from==='client') { cls='wa-msg-in'; }
 
-if(m.isRes) return `
-<div class="wa-new-res">
-<div class="wa-new-res-title">✅ Réservation créée automatiquement</div>
-<div class="wa-new-res-content">${m.text.replace(/\n/g,'<br>')}</div>
-<div class="wa-msg-time">${m.time}</div>
-</div>`;
+ if(m.isRes) return `
+ <div class="wa-new-res">
+ <div class="wa-new-res-title"> Réservation créée automatiquement</div>
+ <div class="wa-new-res-content">${m.text.replace(/\n/g,'<br>')}</div>
+ <div class="wa-msg-time">${m.time}</div>
+ </div>`;
 
-return `<div class="wa-msg ${cls}">${label}${m.text.replace(/\n/g,'<br>')}<div class="wa-msg-time">${m.time}</div></div>`;
-}).join('');
-container.scrollTop = container.scrollHeight;
+ return `<div class="wa-msg ${cls}">${label}${m.text.replace(/\n/g,'<br>')}<div class="wa-msg-time">${m.time}</div></div>`;
+ }).join('');
+ container.scrollTop = container.scrollHeight;
 }
 
 function sendWaMsg() {
-const input = document.getElementById('wa-msg-input');
-const text = input.value.trim();
-if(!text || !activeConvId) return;
-input.value = '';
-const conv = waConversations.find(c=>c.id===activeConvId);
-conv.messages.push({from:'admin', text, time:getTime()});
-conv.managed = true;
-humanTakenOver = true;
-document.getElementById('assign-btn').textContent = '🤖 Remettre au bot';
-renderMessages(conv);
-renderWaContacts();
+ const input = document.getElementById('wa-msg-input');
+ const text = input.value.trim();
+ if(!text || !activeConvId) return;
+ input.value = '';
+ const conv = waConversations.find(c=>c.id===activeConvId);
+ conv.messages.push({from:'admin', text, time:getTime()});
+ conv.managed = true;
+ humanTakenOver = true;
+ document.getElementById('assign-btn').textContent = ' Remettre au bot';
+ renderMessages(conv);
+ renderWaContacts();
 }
 
 function toggleAssign() {
-const conv = waConversations.find(c=>c.id===activeConvId);
-if(!conv) return;
-conv.managed = !conv.managed;
-humanTakenOver = conv.managed;
-document.getElementById('assign-btn').textContent = conv.managed ? '🤖 Remettre au bot' : '👤 Prendre en charge';
-const status = document.querySelector('.wa-chat-status');
-if(status) status.textContent = conv.managed ? '👤 Pris en charge par admin' : '🤖 Géré par le bot';
+ const conv = waConversations.find(c=>c.id===activeConvId);
+ if(!conv) return;
+ conv.managed = !conv.managed;
+ humanTakenOver = conv.managed;
+ document.getElementById('assign-btn').textContent = conv.managed ? ' Remettre au bot' : ' Prendre en charge';
+ const status = document.querySelector('.wa-chat-status');
+ if(status) status.textContent = conv.managed ? ' Pris en charge par admin' : ' Géré par le bot';
 }
 
 function convertToReservation() {
-const conv = waConversations.find(c=>c.id===activeConvId);
-if(!conv) return;
-document.getElementById('r-nom').value = conv.name;
-document.getElementById('r-tel').value = conv.tel;
-document.getElementById('r-source').value = 'WhatsApp Bot';
-openModal('modal-res');
+ const conv = waConversations.find(c=>c.id===activeConvId);
+ if(!conv) return;
+ document.getElementById('r-nom').value = conv.name;
+ document.getElementById('r-tel').value = conv.tel;
+ document.getElementById('r-source').value = 'WhatsApp Bot';
+ openModal('modal-res');
 }
 
 function renderRapports() {
-// STATS
-const total = reservations.length;
-const termines = reservations.filter(r=>r.statut==='Terminé').length;
-const attente = reservations.filter(r=>r.statut==='En attente').length;
-const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+ // STATS
+ const total = reservations.length;
+ const termines = reservations.filter(r=>r.statut==='Terminé').length;
+ const attente = reservations.filter(r=>r.statut==='En attente').length;
+ const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
 
-const statsEl = document.getElementById('rap-stats');
-if(statsEl) statsEl.innerHTML = `
-<div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon">📅</div><div class="stat-val">${total}</div><div class="stat-lbl">Total réservations</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon">✅</div><div class="stat-val">${termines}</div><div class="stat-lbl">Terminées</div><div class="stat-chg" style="color:var(--green)">${total?Math.round(termines/total*100):0}% du total</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon">⏳</div><div class="stat-val">${attente}</div><div class="stat-lbl">En attente</div></div>
-<div class="stat-card"><div class="stat-glow" style="background:var(--wa-green)"></div><div class="stat-icon">🤖</div><div class="stat-val">${waBot}</div><div class="stat-lbl">Via WhatsApp Bot</div><div class="stat-chg" style="color:var(--cyan)">${total?Math.round(waBot/total*100):0}% automatique</div></div>
-`;
+ const statsEl = document.getElementById('rap-stats');
+ if(statsEl) statsEl.innerHTML = `
+ <div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon"> </div><div class="stat-val">${total}</div><div class="stat-lbl">Total réservations</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon"> </div><div class="stat-val">${termines}</div><div class="stat-lbl">Terminées</div><div class="stat-chg" style="color:var(--green)">${total?Math.round(termines/total*100):0}% du total</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon"> </div><div class="stat-val">${attente}</div><div class="stat-lbl">En attente</div></div>
+ <div class="stat-card"><div class="stat-glow" style="background:var(--wa-green)"></div><div class="stat-icon"> </div><div class="stat-val">${waBot}</div><div class="stat-lbl">Via WhatsApp Bot</div><div class="stat-chg" style="color:var(--cyan)">${total?Math.round(waBot/total*100):0}% automatique</div></div>
+ `;
 
-// SERVICES
-const services = {};
-reservations.forEach(r=>{ services[r.service]=(services[r.service]||0)+1; });
-const maxS = Math.max(...Object.values(services), 1);
-const servicesEl = document.getElementById('rap-services');
-if(servicesEl) servicesEl.innerHTML = Object.entries(services).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`
-<div style="margin-bottom:14px">
-<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
-<span>${s}</span><span style="color:var(--cyan);font-weight:600">${n} réservation${n>1?'s':''}</span>
-</div>
-<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
-<div style="background:linear-gradient(90deg,var(--blue),var(--cyan));height:100%;width:${Math.round(n/maxS*100)}%;border-radius:20px;transition:width 0.5s"></div>
-</div>
-</div>
-`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+ // SERVICES
+ const services = {};
+ reservations.forEach(r=>{ services[r.service]=(services[r.service]||0)+1; });
+ const maxS = Math.max(...Object.values(services), 1);
+ const servicesEl = document.getElementById('rap-services');
+ if(servicesEl) servicesEl.innerHTML = Object.entries(services).sort((a,b)=>b[1]-a[1]).map(([s,n])=>`
+ <div style="margin-bottom:14px">
+ <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+ <span>${s}</span><span style="color:var(--cyan);font-weight:600">${n} réservation${n>1?'s':''}</span>
+ </div>
+ <div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
+ <div style="background:linear-gradient(90deg,var(--blue),var(--cyan));height:100%;width:${Math.round(n/maxS*100)}%;border-radius:20px;transition:width 0.5s"></div>
+ </div>
+ </div>
+ `).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
 
-// AGENTS
-const agentStats = {};
-reservations.forEach(r=>{ agentStats[r.agent]=(agentStats[r.agent]||0)+1; });
-const maxA = Math.max(...Object.values(agentStats), 1);
-const agentsEl = document.getElementById('rap-agents');
-if(agentsEl) agentsEl.innerHTML = Object.entries(agentStats).sort((a,b)=>b[1]-a[1]).map(([a,n],i)=>{
-const colors = ['#FFD60A','#C0C0C0','#CD7F32','#00C2FF','#00E5A0'];
-return `
-<div style="margin-bottom:14px">
-<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;align-items:center">
-<span style="display:flex;align-items:center;gap:6px">
-${i<3?`<span style="font-size:16px">${['🥇','🥈','🥉'][i]}</span>`:''}
-${a}
-</span>
-<span style="color:var(--yellow);font-weight:600">${n} lavage${n>1?'s':''}</span>
-</div>
-<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
-<div style="background:linear-gradient(90deg,${colors[i]||'#6B7A99'},${colors[i]||'#6B7A99'}99);height:100%;width:${Math.round(n/maxA*100)}%;border-radius:20px"></div>
-</div>
-</div>`;
-}).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+ // AGENTS
+ const agentStats = {};
+ reservations.forEach(r=>{ agentStats[r.agent]=(agentStats[r.agent]||0)+1; });
+ const maxA = Math.max(...Object.values(agentStats), 1);
+ const agentsEl = document.getElementById('rap-agents');
+ if(agentsEl) agentsEl.innerHTML = Object.entries(agentStats).sort((a,b)=>b[1]-a[1]).map(([a,n],i)=>{
+ const colors = ['#FFD60A','#C0C0C0','#CD7F32','#00C2FF','#00E5A0'];
+ return `
+ <div style="margin-bottom:14px">
+ <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;align-items:center">
+ <span style="display:flex;align-items:center;gap:6px">
+ ${i<3?`<span style="font-size:16px">${[' ',' ',' '][i]}</span>`:''}
+ ${a}
+ </span>
+ <span style="color:var(--yellow);font-weight:600">${n} lavage${n>1?'s':''}</span>
+ </div>
+ <div style="background:rgba(255,255,255,0.06);border-radius:20px;height:8px;overflow:hidden">
+ <div style="background:linear-gradient(90deg,${colors[i]||'#6B7A99'},${colors[i]||'#6B7A99'}99);height:100%;width:${Math.round(n/maxA*100)}%;border-radius:20px"></div>
+ </div>
+ </div>`;
+ }).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
 
-// ZONES
-const zones = {};
-reservations.forEach(r=>{ if(r.zone&&r.zone!=='—') zones[r.zone]=(zones[r.zone]||0)+1; });
-const maxZ = Math.max(...Object.values(zones), 1);
-const zonesEl = document.getElementById('rap-zones');
-if(zonesEl) zonesEl.innerHTML = Object.entries(zones).sort((a,b)=>b[1]-a[1]).map(([z,n])=>`
-<div style="margin-bottom:12px">
-<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
-<span>📍 ${z}</span><span style="color:var(--orange);font-weight:600">${n}</span>
-</div>
-<div style="background:rgba(255,255,255,0.06);border-radius:20px;height:7px;overflow:hidden">
-<div style="background:linear-gradient(90deg,var(--orange),var(--yellow));height:100%;width:${Math.round(n/maxZ*100)}%;border-radius:20px"></div>
-</div>
-</div>
-`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+ // ZONES
+ const zones = {};
+ reservations.forEach(r=>{ if(r.zone&&r.zone!=='—') zones[r.zone]=(zones[r.zone]||0)+1; });
+ const maxZ = Math.max(...Object.values(zones), 1);
+ const zonesEl = document.getElementById('rap-zones');
+ if(zonesEl) zonesEl.innerHTML = Object.entries(zones).sort((a,b)=>b[1]-a[1]).map(([z,n])=>`
+ <div style="margin-bottom:12px">
+ <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+ <span> ${z}</span><span style="color:var(--orange);font-weight:600">${n}</span>
+ </div>
+ <div style="background:rgba(255,255,255,0.06);border-radius:20px;height:7px;overflow:hidden">
+ <div style="background:linear-gradient(90deg,var(--orange),var(--yellow));height:100%;width:${Math.round(n/maxZ*100)}%;border-radius:20px"></div>
+ </div>
+ </div>
+ `).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
 
-// SOURCES
-const sources = {};
-reservations.forEach(r=>{ sources[r.source]=(sources[r.source]||0)+1; });
-const sourcesEl = document.getElementById('rap-sources');
-if(sourcesEl) sourcesEl.innerHTML = Object.entries(sources).map(([s,n])=>`
-<div class="agent-row">
-<div style="font-size:22px">${s==='WhatsApp Bot'?'🤖':s==='Manuel'?'👤':'📞'}</div>
-<div class="agent-inf"><div class="agent-nm">${s}</div><div class="agent-zn">${n} réservation${n>1?'s':''}</div></div>
-<div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--cyan)">${total?Math.round(n/total*100):0}%</div>
-</div>
-`).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
+ // SOURCES
+ const sources = {};
+ reservations.forEach(r=>{ sources[r.source]=(sources[r.source]||0)+1; });
+ const sourcesEl = document.getElementById('rap-sources');
+ if(sourcesEl) sourcesEl.innerHTML = Object.entries(sources).map(([s,n])=>`
+ <div class="agent-row">
+ <div style="font-size:22px">${s==='WhatsApp Bot'?' ':s==='Manuel'?' ':' '}</div>
+ <div class="agent-inf"><div class="agent-nm">${s}</div><div class="agent-zn">${n} réservation${n>1?'s':''}</div></div>
+ <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--cyan)">${total?Math.round(n/total*100):0}%</div>
+ </div>
+ `).join('') || '<div style="color:var(--muted);font-size:13px">Aucune donnée</div>';
 }
 
 function exportRapport() {
-const total = reservations.length;
-const termines = reservations.filter(r=>r.statut==='Terminé').length;
-const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
-const txt = `RAPPORT ACCESS WASH\n${'='.repeat(30)}\nDate: ${new Date().toLocaleDateString('fr-FR')}\n\nTOTAL RÉSERVATIONS: ${total}\nTERMINÉES: ${termines}\nVIA WHATSAPP BOT: ${waBot}\nCLIENTS: ${clients.length}\nAGENTS: ${agents.length}\n\nRÉSERVATIONS:\n${reservations.map(r=>`- ${r.client} | ${r.service} | ${r.statut} | ${r.date}`).join('\n')}`;
-const blob = new Blob([txt], {type:'text/plain'});
-const a = document.createElement('a');
-a.href = URL.createObjectURL(blob);
-a.download = 'rapport-access-wash.txt';
-a.click();
-showToast('📥 Rapport exporté !', 'Fichier téléchargé avec succès');
+ const total = reservations.length;
+ const termines = reservations.filter(r=>r.statut==='Terminé').length;
+ const waBot = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+ const txt = `RAPPORT ACCESS WASH\n${'='.repeat(30)}\nDate: ${new Date().toLocaleDateString('fr-FR')}\n\nTOTAL RÉSERVATIONS: ${total}\nTERMINÉES: ${termines}\nVIA WHATSAPP BOT: ${waBot}\nCLIENTS: ${clients.length}\nAGENTS: ${agents.length}\n\nRÉSERVATIONS:\n${reservations.map(r=>`- ${r.client} | ${r.service} | ${r.statut} | ${r.date}`).join('\n')}`;
+ const blob = new Blob([txt], {type:'text/plain'});
+ const a = document.createElement('a');
+ a.href = URL.createObjectURL(blob);
+ a.download = 'rapport-access-wash.txt';
+ a.click();
+ showToast(' Rapport exporté !', 'Fichier téléchargé avec succès');
 }
 
 function renderAll() {
-renderDashboard();
-renderReservations();
-renderClients();
-renderAgents();
-renderPaiements();
-renderRapports();
-renderWaContacts();
-if(activeConvId) openConv(activeConvId);
+ renderDashboard();
+ renderReservations();
+ renderClients();
+ renderAgents();
+ renderPaiements();
+ renderRapports();
+ renderWaContacts();
+ if(activeConvId) openConv(activeConvId);
 }
 
 // ============ MODALS ============
@@ -1019,82 +1079,82 @@ document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click
 
 // ============ ACTIONS ============
 function addReservation() {
-const nom = document.getElementById('r-nom').value.trim();
-if(!nom) return;
-const id = 'RES'+String(reservations.length+1).padStart(3,'0');
-reservations.unshift({
-id, client:nom, tel:document.getElementById('r-tel').value,
-service:document.getElementById('r-service').value.split(' — ')[0],
-agent:document.getElementById('r-agent').value,
-date:document.getElementById('r-date').value||'2026-02-23',
-heure:document.getElementById('r-heure').value||'--:--',
-zone:document.getElementById('r-zone').value||'—',
-montant:document.getElementById('r-service').value.match(/[\d\s]+(?= FC)/)?document.getElementById('r-service').value.match(/([\d\s]+) FC/)?.[1]:'—',
-source:document.getElementById('r-source').value,
-statut:'En attente'
-});
-closeModal('modal-res');
-['r-nom','r-tel','r-zone','r-date','r-heure'].forEach(id=>document.getElementById(id).value='');
-showToast('📅 Réservation ajoutée !', nom + ' — ' + document.getElementById('r-service')?.value?.split(' — ')[0]);
-sauvegarder();
-renderAll();
+ const nom = document.getElementById('r-nom').value.trim();
+ if(!nom) return;
+ const id = 'RES'+String(reservations.length+1).padStart(3,'0');
+ reservations.unshift({
+ id, client:nom, tel:document.getElementById('r-tel').value,
+ service:document.getElementById('r-service').value.split(' — ')[0],
+ agent:document.getElementById('r-agent').value,
+ date:document.getElementById('r-date').value||'2026-02-23',
+ heure:document.getElementById('r-heure').value||'--:--',
+ zone:document.getElementById('r-zone').value||'—',
+ montant:document.getElementById('r-service').value.match(/[\d\s]+(?= FC)/)?document.getElementById('r-service').value.match(/([\d\s]+) FC/)?.[1]:'—',
+ source:document.getElementById('r-source').value,
+ statut:'En attente'
+ });
+ closeModal('modal-res');
+ ['r-nom','r-tel','r-zone','r-date','r-heure'].forEach(id=>document.getElementById(id).value='');
+ showToast(' Réservation ajoutée !', nom + ' — ' + document.getElementById('r-service')?.value?.split(' — ')[0]);
+ sauvegarder();
+ renderAll();
 }
 
 function delRes(i) {
-if(confirm('Supprimer cette réservation ?')) { reservations.splice(i,1); sauvegarder(); renderAll(); }
+ if(confirm('Supprimer cette réservation ?')) { reservations.splice(i,1); sauvegarder(); renderAll(); }
 }
 
 function addClient() {
-const nom = document.getElementById('c-nom').value.trim();
-if(!nom) return;
-clients.unshift({nom, tel:document.getElementById('c-tel').value, zone:document.getElementById('c-zone').value, reservations:0, total:'0 FC', source:'Manuel', statut:'Nouveau'});
-closeModal('modal-client');
-['c-nom','c-tel','c-zone'].forEach(id=>document.getElementById(id).value='');
-sauvegarder();
-renderAll();
+ const nom = document.getElementById('c-nom').value.trim();
+ if(!nom) return;
+ clients.unshift({nom, tel:document.getElementById('c-tel').value, zone:document.getElementById('c-zone').value, reservations:0, total:'0 FC', source:'Manuel', statut:'Nouveau'});
+ closeModal('modal-client');
+ ['c-nom','c-tel','c-zone'].forEach(id=>document.getElementById(id).value='');
+ sauvegarder();
+ renderAll();
 }
 
 function addAgent() {
-const nom = document.getElementById('a-nom').value.trim();
-if(!nom) return;
-const cols=['#0047FF','#00E5A0','#FF6B35','#FFD60A','#00C2FF'];
-agents.push({nom, tel:document.getElementById('a-tel').value, zone:document.getElementById('a-zone').value, lavages:0, note:'⭐ Nouveau', statut:'Disponible', color:cols[agents.length%cols.length]});
-closeModal('modal-agent');
-['a-nom','a-tel','a-zone'].forEach(id=>document.getElementById(id).value='');
-sauvegarder();
-renderAll();
+ const nom = document.getElementById('a-nom').value.trim();
+ if(!nom) return;
+ const cols=['#0047FF','#00E5A0','#FF6B35','#FFD60A','#00C2FF'];
+ agents.push({nom, tel:document.getElementById('a-tel').value, zone:document.getElementById('a-zone').value, lavages:0, note:' Nouveau', statut:'Disponible', color:cols[agents.length%cols.length]});
+ closeModal('modal-agent');
+ ['a-nom','a-tel','a-zone'].forEach(id=>document.getElementById(id).value='');
+ sauvegarder();
+ renderAll();
 }
 
 // ============ TOAST ============
 function showToast(title, body) {
-document.getElementById('toast-title').textContent = title;
-document.getElementById('toast-body').textContent = body;
-const t = document.getElementById('toast');
-t.classList.add('show');
-setTimeout(()=>t.classList.remove('show'), 4000);
+ document.getElementById('toast-title').textContent = title;
+ document.getElementById('toast-body').textContent = body;
+ const t = document.getElementById('toast');
+ t.classList.add('show');
+ setTimeout(()=>t.classList.remove('show'), 4000);
 }
 
 // ============ SIMULATE NEW WA MSG ============
 const simulatedMsgs = [
-{name:'Mamie Loso', tel:'+243 877 000 111', color:'#9B59B6', initials:'ML', text:'Bonjour, j\'ai besoin d\'un lavage urgent !'},
-{name:'Boss Keba', tel:'+243 877 222 333', color:'#E74C3C', initials:'BK', text:'C\'est combien pour 2 voitures ?'},
-{name:'Josée Nkemi', tel:'+243 877 444 555', color:'#1ABC9C', initials:'JN', text:'Vous êtes disponible demain matin ?'},
+ {name:'Mamie Loso', tel:'+243 877 000 111', color:'#9B59B6', initials:'ML', text:'Bonjour, j\'ai besoin d\'un lavage urgent !'},
+ {name:'Boss Keba', tel:'+243 877 222 333', color:'#E74C3C', initials:'BK', text:'C\'est combien pour 2 voitures ?'},
+ {name:'Josée Nkemi', tel:'+243 877 444 555', color:'#1ABC9C', initials:'JN', text:'Vous êtes disponible demain matin ?'},
 ];
 let simIdx = 0;
 
 function simulateNewMsg() {
-const m = simulatedMsgs[simIdx % simulatedMsgs.length];
-simIdx++;
-const newConv = {
-id: Date.now(), name:m.name, tel:m.tel, color:m.color, initials:m.initials, unread:1, managed:false,
-messages:[
-{from:'client', text:m.text, time:getTime()},
-{from:'bot', text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nComment puis-je vous aider ?\n1️⃣ Réservation\n2️⃣ Tarifs\n3️⃣ Suivi\n4️⃣ Agent humain', time:getTime()},
-]
-};
-waConversations.unshift(newConv);
-showToast('💬 Nouveau message WhatsApp', m.name + ' : ' + m.text.substring(0,40));
-renderWaContacts();
+ const m = simulatedMsgs[simIdx % simulatedMsgs.length];
+ simIdx++;
+ const newConv = {
+ id: Date.now(), name:m.name, tel:m.tel, color:m.color, initials:m.initials, unread:1, managed:false,
+ messages:[
+ {from:'client', text:m.text, time:getTime()},
+ {from:'bot', text:'Bonjour ! Bienvenue chez Access Wash \n\nComment puis-je vous aider ?\n Réservation\n Tarifs\n Suivi\n Agent humain', time:getTime()},
+ ]
+ };
+ waConversations.unshift(newConv);
+ showToast(' Nouveau message WhatsApp', m.name + ' : ' + m.text.substring(0,40));
+ renderWaContacts();
 }
 
 // Simulate new messages every 30s
@@ -1102,95 +1162,115 @@ setInterval(simulateNewMsg, 30000);
 
 // ============ SAUVEGARDE LOCALE ============
 const DEFAULT_DATA = {
-reservations: [
-{id:'RES001',client:'Merveille Kalombo',tel:'+243 812 345 678',service:'Lavage complet',agent:'Patrick Lumu',date:'2026-02-23',heure:'08:30',zone:'Gombe',montant:'7 000',source:'Manuel',statut:'Terminé'},
-{id:'RES002',client:'Patient Ngoy',tel:'+243 898 765 432',service:'Lavage simple',agent:'Grace Nkosi',date:'2026-02-23',heure:'10:00',zone:'Lemba',montant:'4 000',source:'WhatsApp Bot',statut:'En cours'},
-{id:'RES003',client:'Divine Mutombo',tel:'+243 823 111 222',service:'Cire & Polissage',agent:'Didier Mbemba',date:'2026-02-23',heure:'11:30',zone:'Matete',montant:'15 000',source:'WhatsApp Bot',statut:'En attente'},
-{id:'RES004',client:'Espoir Kabila',tel:'+243 845 999 888',service:'Lavage complet',agent:'Ange Mukendi',date:'2026-02-23',heure:'14:00',zone:'Ngaliema',montant:'7 000',source:'WhatsApp Bot',statut:'En attente'},
-],
-clients: [
-{nom:'Merveille Kalombo',tel:'+243 812 345 678',zone:'Gombe',reservations:5,total:'35 000 FC',source:'Manuel',statut:'VIP'},
-{nom:'Patient Ngoy',tel:'+243 898 765 432',zone:'Lemba',reservations:2,total:'8 000 FC',source:'WhatsApp',statut:'Actif'},
-{nom:'Divine Mutombo',tel:'+243 823 111 222',zone:'Matete',reservations:8,total:'96 000 FC',source:'WhatsApp',statut:'VIP'},
-{nom:'Espoir Kabila',tel:'+243 845 999 888',zone:'Ngaliema',reservations:1,total:'7 000 FC',source:'WhatsApp',statut:'Nouveau'},
-],
-agents: [
-{nom:'Patrick Lumu',tel:'+243 811 111 111',zone:'Gombe',lavages:42,note:'⭐ 4.9',statut:'Disponible',color:'#0047FF'},
-{nom:'Grace Nkosi',tel:'+243 822 222 222',zone:'Lemba',lavages:38,note:'⭐ 4.8',statut:'En mission',color:'#00E5A0'},
-{nom:'Didier Mbemba',tel:'+243 833 333 333',zone:'Matete',lavages:51,note:'⭐ 4.7',statut:'En mission',color:'#FF6B35'},
-{nom:'Ange Mukendi',tel:'+243 844 444 444',zone:'Ngaliema',lavages:29,note:'⭐ 4.6',statut:'Disponible',color:'#FFD60A'},
-{nom:'Serge Bope',tel:'+243 855 555 555',zone:'Kalamu',lavages:35,note:'⭐ 4.8',statut:'Disponible',color:'#00C2FF'},
-],
-paiements: [
-{client:'Merveille Kalombo',service:'Lavage complet',montant:'7 000 FC',methode:'Cash',date:'23/02/2026',statut:'Payé'},
-{client:'Patient Ngoy',service:'Lavage simple',montant:'4 000 FC',methode:'M-Pesa',date:'23/02/2026',statut:'En attente'},
-{client:'Divine Mutombo',service:'Cire & Polissage',montant:'15 000 FC',methode:'Airtel Money',date:'23/02/2026',statut:'Payé'},
-]
+ reservations: [
+ {id:'RES001',client:'Merveille Kalombo',tel:'+243 812 345 678',service:'Lavage complet',agent:'Patrick Lumu',date:'2026-02-23',heure:'08:30',zone:'Gombe',montant:'7 000',source:'Manuel',statut:'Terminé'},
+ {id:'RES002',client:'Patient Ngoy',tel:'+243 898 765 432',service:'Lavage simple',agent:'Grace Nkosi',date:'2026-02-23',heure:'10:00',zone:'Lemba',montant:'4 000',source:'WhatsApp Bot',statut:'En cours'},
+ {id:'RES003',client:'Divine Mutombo',tel:'+243 823 111 222',service:'Cire & Polissage',agent:'Didier Mbemba',date:'2026-02-23',heure:'11:30',zone:'Matete',montant:'15 000',source:'WhatsApp Bot',statut:'En attente'},
+ {id:'RES004',client:'Espoir Kabila',tel:'+243 845 999 888',service:'Lavage complet',agent:'Ange Mukendi',date:'2026-02-23',heure:'14:00',zone:'Ngaliema',montant:'7 000',source:'WhatsApp Bot',statut:'En attente'},
+ ],
+ clients: [
+ {nom:'Merveille Kalombo',tel:'+243 812 345 678',zone:'Gombe',reservations:5,total:'35 000 FC',source:'Manuel',statut:'VIP'},
+ {nom:'Patient Ngoy',tel:'+243 898 765 432',zone:'Lemba',reservations:2,total:'8 000 FC',source:'WhatsApp',statut:'Actif'},
+ {nom:'Divine Mutombo',tel:'+243 823 111 222',zone:'Matete',reservations:8,total:'96 000 FC',source:'WhatsApp',statut:'VIP'},
+ {nom:'Espoir Kabila',tel:'+243 845 999 888',zone:'Ngaliema',reservations:1,total:'7 000 FC',source:'WhatsApp',statut:'Nouveau'},
+ ],
+ agents: [
+ {nom:'Patrick Lumu',tel:'+243 811 111 111',zone:'Gombe',lavages:42,note:' 4.9',statut:'Disponible',color:'#0047FF'},
+ {nom:'Grace Nkosi',tel:'+243 822 222 222',zone:'Lemba',lavages:38,note:' 4.8',statut:'En mission',color:'#00E5A0'},
+ {nom:'Didier Mbemba',tel:'+243 833 333 333',zone:'Matete',lavages:51,note:' 4.7',statut:'En mission',color:'#FF6B35'},
+ {nom:'Ange Mukendi',tel:'+243 844 444 444',zone:'Ngaliema',lavages:29,note:' 4.6',statut:'Disponible',color:'#FFD60A'},
+ {nom:'Serge Bope',tel:'+243 855 555 555',zone:'Kalamu',lavages:35,note:' 4.8',statut:'Disponible',color:'#00C2FF'},
+ ],
+ paiements: [
+ {client:'Merveille Kalombo',service:'Lavage complet',montant:'7 000 FC',methode:'Cash',date:'23/02/2026',statut:'Payé'},
+ {client:'Patient Ngoy',service:'Lavage simple',montant:'4 000 FC',methode:'M-Pesa',date:'23/02/2026',statut:'En attente'},
+ {client:'Divine Mutombo',service:'Cire & Polissage',montant:'15 000 FC',methode:'Airtel Money',date:'23/02/2026',statut:'Payé'},
+ ]
 };
 
 function sauvegarder() {
-localStorage.setItem('aw_reservations', JSON.stringify(reservations));
-localStorage.setItem('aw_clients', JSON.stringify(clients));
-localStorage.setItem('aw_agents', JSON.stringify(agents));
-localStorage.setItem('aw_paiements', JSON.stringify(paiements));
+ localStorage.setItem('aw_reservations', JSON.stringify(reservations));
+ localStorage.setItem('aw_clients', JSON.stringify(clients));
+ localStorage.setItem('aw_agents', JSON.stringify(agents));
+ localStorage.setItem('aw_paiements', JSON.stringify(paiements));
 }
 
 function chargerDonnees() {
-reservations = JSON.parse(localStorage.getItem('aw_reservations') || 'null') || DEFAULT_DATA.reservations;
-clients = JSON.parse(localStorage.getItem('aw_clients') || 'null') || DEFAULT_DATA.clients;
-agents = JSON.parse(localStorage.getItem('aw_agents') || 'null') || DEFAULT_DATA.agents;
-paiements = JSON.parse(localStorage.getItem('aw_paiements') || 'null') || DEFAULT_DATA.paiements;
+ reservations = JSON.parse(localStorage.getItem('aw_reservations') || 'null') || DEFAULT_DATA.reservations;
+ clients = JSON.parse(localStorage.getItem('aw_clients') || 'null') || DEFAULT_DATA.clients;
+ agents = JSON.parse(localStorage.getItem('aw_agents') || 'null') || DEFAULT_DATA.agents;
+ paiements = JSON.parse(localStorage.getItem('aw_paiements') || 'null') || DEFAULT_DATA.paiements;
 }
 
 // ============ LOGIN ============
 const USERS = {
-'admin': { pass:'admin123', name:'Admin Access', role:'Directeur', av:'AW', color:'#00C2FF' },
-'agent1': { pass:'agent123', name:'Patrick Lumu', role:'Agent — Gombe', av:'PL', color:'#00E5A0' },
-'agent2': { pass:'agent456', name:'Grace Nkosi', role:'Agent — Lemba', av:'GN', color:'#FF6B35' },
+ 'admin': { pass:'admin123', name:'Admin Access', role:'Directeur', av:'AW', color:'#00C2FF' },
+ 'agent1': { pass:'agent123', name:'Patrick Lumu', role:'Agent — Gombe', av:'PL', color:'#00E5A0' },
+ 'agent2': { pass:'agent456', name:'Grace Nkosi', role:'Agent — Lemba', av:'GN', color:'#FF6B35' },
 };
 
 function tryLogin() {
-const u = document.getElementById('login-user').value.trim();
-const p = document.getElementById('login-pass').value.trim();
-const user = USERS[u];
-if(user && user.pass === p) {
-doLogin(user);
-} else {
-document.getElementById('login-error').classList.add('show');
-setTimeout(()=>document.getElementById('login-error').classList.remove('show'), 3000);
-}
+ const u = document.getElementById('login-user').value.trim();
+ const p = document.getElementById('login-pass').value.trim();
+ const user = USERS[u];
+ if(user && user.pass === p) {
+ doLogin(user);
+ } else {
+ document.getElementById('login-error').classList.add('show');
+ setTimeout(()=>document.getElementById('login-error').classList.remove('show'), 3000);
+ }
 }
 
 function quickLogin(u, p) {
-document.getElementById('login-user').value = u;
-document.getElementById('login-pass').value = p;
-tryLogin();
+ document.getElementById('login-user').value = u;
+ document.getElementById('login-pass').value = p;
+ tryLogin();
 }
 
 function doLogin(user) {
-chargerDonnees();
-document.getElementById('login-screen').classList.add('hidden');
-document.getElementById('sidebar-app').style.display = 'flex';
-document.getElementById('main-app').style.display = 'block';
-document.getElementById('current-name').textContent = user.name;
-document.getElementById('current-role').textContent = user.role;
-document.getElementById('current-av').textContent = user.av;
-document.getElementById('current-av').style.background = user.color + '30';
-document.getElementById('current-av').style.color = user.color;
-renderAll();
+ chargerDonnees();
+ document.getElementById('login-screen').classList.add('hidden');
+ document.getElementById('sidebar-app').style.display = 'flex';
+ document.getElementById('main-app').style.display = 'block';
+ document.getElementById('current-name').textContent = user.name;
+ document.getElementById('current-role').textContent = user.role;
+ document.getElementById('current-av').textContent = user.av;
+ document.getElementById('current-av').style.background = user.color + '30';
+ document.getElementById('current-av').style.color = user.color;
+ renderAll();
 }
 
 function logout() {
-document.getElementById('login-screen').classList.remove('hidden');
-document.getElementById('sidebar-app').style.display = 'none';
-document.getElementById('main-app').style.display = 'none';
-document.getElementById('login-user').value = '';
-document.getElementById('login-pass').value = '';
+ document.getElementById('login-screen').classList.remove('hidden');
+ document.getElementById('sidebar-app').style.display = 'none';
+ document.getElementById('main-app').style.display = 'none';
+ document.getElementById('login-user').value = '';
+ document.getElementById('login-pass').value = '';
 }
 
 // ============ INIT ============
 renderAll();
 </script>
+
+<!-- BOTTOM NAV MOBILE -->
+
+<nav class="bottom-nav" id="bottom-nav">
+ <button class="bnav-item active" onclick="showPageMobile('dashboard',this)">
+ <span class="bnav-icon"> </span>Accueil
+ </button>
+ <button class="bnav-item" onclick="showPageMobile('reservations',this)">
+ <span class="bnav-badge"><span class="bnav-icon"> </span><span class="bnav-badge-dot"></span></span>Réservations
+ </button>
+ <button class="bnav-item" onclick="showPageMobile('whatsapp',this)">
+ <span class="bnav-badge"><span class="bnav-icon"> </span><span class="bnav-badge-dot" style="background:var(--wa-green)"></span></span>WhatsApp
+ </button>
+ <button class="bnav-item" onclick="showPageMobile('rapports',this)">
+ <span class="bnav-icon"> </span>Rapports
+ </button>
+ <button class="bnav-item" onclick="showPageMobile('agents',this)">
+ <span class="bnav-icon"> </span>Agents
+ </button>
+</nav>
 
 </body>
 </html>
