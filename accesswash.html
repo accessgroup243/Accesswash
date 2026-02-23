@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Wash – Système Complet</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+--blue: #0047FF;
+--cyan: #00C2FF;
+--dark: #050A18;
+--dark2: #0C1428;
+--card: #101A30;
+--border: rgba(255,255,255,0.08);
+--text: #E8EDF8;
+--muted: #6B7A99;
+--green: #00E5A0;
+--wa-green: #25D366;
+--wa-dark: #128C7E;
+--orange: #FF6B35;
+--yellow: #FFD60A;
+--red: #FF4757;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'DM Sans',sans-serif; background:var(--dark); color:var(--text); min-height:100vh; display:flex; }
+
+/* SIDEBAR */
+.sidebar {
+position:fixed; top:0; left:0;
+width:230px; height:100vh;
+background:var(–dark2);
+border-right:1px solid var(–border);
+display:flex; flex-direction:column;
+padding:24px 16px; z-index:10;
+}
+.logo { display:flex; align-items:center; gap:10px; margin-bottom:32px; }
+.logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(–blue),var(–cyan)); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.logo-text { font-family:‘Syne’,sans-serif; font-weight:800; font-size:16px; line-height:1.1; }
+.logo-text span { display:block; font-size:10px; font-weight:400; color:var(–muted); font-family:‘DM Sans’,sans-serif; letter-spacing:1px; text-transform:uppercase; }
+
+.nav-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:var(–muted); margin:16px 0 6px 8px; }
+.nav-btn { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; cursor:pointer; font-size:13.5px; color:var(–muted); transition:all 0.2s; margin-bottom:2px; border:none; background:none; width:100%; text-align:left; font-family:‘DM Sans’,sans-serif; }
+.nav-btn:hover { background:rgba(255,255,255,0.05); color:var(–text); }
+.nav-btn.active { background:rgba(0,71,255,0.15); color:var(–cyan); border-left:2px solid var(–cyan); }
+.nav-icon { font-size:15px; width:18px; text-align:center; }
+
+.notif-dot { background:var(–orange); color:white; border-radius:10px; padding:1px 7px; font-size:10px; font-weight:700; margin-left:auto; }
+.live-dot { width:8px; height:8px; background:var(–wa-green); border-radius:50%; margin-left:auto; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.sidebar-footer { margin-top:auto; padding-top:16px; border-top:1px solid var(–border); }
+.user-card { display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; background:rgba(255,255,255,0.03); }
+.user-avatar { width:34px; height:34px; background:linear-gradient(135deg,var(–blue),var(–cyan)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+.user-name { font-size:13px; font-weight:500; }
+.user-role { font-size:11px; color:var(–muted); }
+
+/* MAIN */
+.main { margin-left:230px; padding:28px; flex:1; }
+.page { display:none; }
+.page.active { display:block; animation:fadeIn 0.25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+.page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px; }
+.page-title { font-family:‘Syne’,sans-serif; font-size:26px; font-weight:800; }
+.page-sub { color:var(–muted); font-size:13px; margin-top:4px; }
+
+.btn { padding:9px 18px; border-radius:10px; border:none; cursor:pointer; font-family:‘DM Sans’,sans-serif; font-size:13.5px; font-weight:500; transition:all 0.2s; }
+.btn-primary { background:linear-gradient(135deg,var(–blue),var(–cyan)); color:white; }
+.btn-primary:hover { opacity:0.85; transform:translateY(-1px); }
+.btn-ghost { background:rgba(255,255,255,0.06); color:var(–text); border:1px solid var(–border); }
+.btn-ghost:hover { background:rgba(255,255,255,0.1); }
+.btn-sm { padding:5px 12px; font-size:12px; border-radius:8px; }
+.btn-green { background:rgba(0,229,160,0.15); color:var(–green); border:1px solid rgba(0,229,160,0.3); }
+.btn-red { background:rgba(255,71,87,0.15); color:var(–red); border:1px solid rgba(255,71,87,0.3); }
+
+/* STATS */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.stat-card { background:var(–card); border:1px solid var(–border); border-radius:14px; padding:18px; position:relative; overflow:hidden; }
+.stat-glow { position:absolute; top:-20px; right:-20px; width:70px; height:70px; border-radius:50%; opacity:0.12; }
+.stat-icon { font-size:20px; margin-bottom:10px; }
+.stat-val { font-family:‘Syne’,sans-serif; font-size:24px; font-weight:800; }
+.stat-lbl { color:var(–muted); font-size:12px; margin-top:3px; }
+.stat-chg { font-size:11px; margin-top:6px; }
+
+/* CARD */
+.card { background:var(–card); border:1px solid var(–border); border-radius:14px; padding:22px; }
+.card-title { font-family:‘Syne’,sans-serif; font-size:15px; font-weight:700; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; }
+
+/* TABLE */
+.table { width:100%; border-collapse:collapse; }
+.table th { text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(–muted); padding:7px 10px; border-bottom:1px solid var(–border); }
+.table td { padding:12px 10px; font-size:13px; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; }
+.table tr:last-child td { border-bottom:none; }
+.table tr:hover td { background:rgba(255,255,255,0.02); }
+
+/* BADGES */
+.badge { display:inline-block; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:500; }
+.bg-green { background:rgba(0,229,160,0.15); color:var(–green); }
+.bg-orange { background:rgba(255,107,53,0.15); color:var(–orange); }
+.bg-yellow { background:rgba(255,214,10,0.15); color:var(–yellow); }
+.bg-blue { background:rgba(0,194,255,0.15); color:var(–cyan); }
+.bg-red { background:rgba(255,71,87,0.15); color:var(–red); }
+.bg-wa { background:rgba(37,211,102,0.15); color:var(–wa-green); }
+
+/* GRID */
+.grid-2 { display:grid; grid-template-columns:1fr 340px; gap:18px; }
+
+/* NOTIFICATION TOAST */
+.toast {
+position:fixed; bottom:24px; right:24px;
+background:var(–card); border:1px solid rgba(37,211,102,0.3);
+border-radius:14px; padding:16px 20px;
+display:flex; align-items:flex-start; gap:12px;
+max-width:320px; z-index:1000;
+transform:translateX(400px); transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+.toast.show { transform:translateX(0); }
+.toast-icon { font-size:22px; }
+.toast-title { font-weight:600; font-size:13px; margin-bottom:2px; }
+.toast-body { font-size:12px; color:var(–muted); }
+.toast-source { font-size:11px; color:var(–wa-green); margin-top:4px; }
+
+/* WHATSAPP PANEL */
+.wa-panel { display:grid; grid-template-columns:280px 1fr; gap:18px; height:calc(100vh - 160px); }
+
+.wa-contacts { background:var(–card); border:1px solid var(–border); border-radius:14px; overflow:hidden; display:flex; flex-direction:column; }
+.wa-contacts-header { padding:16px; border-bottom:1px solid var(–border); font-family:‘Syne’,sans-serif; font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px; }
+
+.contact-item { display:flex; align-items:center; gap:10px; padding:12px 16px; cursor:pointer; border-bottom:1px solid rgba(255,255,255,0.03); transition:background 0.15s; }
+.contact-item:hover { background:rgba(255,255,255,0.03); }
+.contact-item.active { background:rgba(0,71,255,0.1); }
+.contact-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+.contact-info { flex:1; min-width:0; }
+.contact-name { font-size:13px; font-weight:500; }
+.contact-preview { font-size:11px; color:var(–muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.contact-time { font-size:10px; color:var(–muted); }
+.contact-unread { background:var(–wa-green); color:white; border-radius:50%; width:17px; height:17px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+.wa-chat-area { background:var(–card); border:1px solid var(–border); border-radius:14px; display:flex; flex-direction:column; overflow:hidden; }
+.wa-chat-header { padding:14px 18px; border-bottom:1px solid var(–border); display:flex; align-items:center; gap:12px; }
+.wa-chat-header .contact-avatar { width:38px; height:38px; }
+.wa-chat-name { font-weight:600; font-size:14px; }
+.wa-chat-status { font-size:11px; color:var(–wa-green); }
+.wa-chat-actions { margin-left:auto; display:flex; gap:8px; }
+
+.wa-messages { flex:1; padding:16px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; background:#0D1117; background-image:url(“data:image/svg+xml,%3Csvg width=‘40’ height=‘40’ viewBox=‘0 0 40 40’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=’%23ffffff’ fill-opacity=‘0.015’%3E%3Cpath d=‘M20 20c0-5.5-4.5-10-10-10S0 14.5 0 20s4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10S10 14.5 10 20s4.5 10 10 10 10-4.5 10-10z’/%3E%3C/g%3E%3C/svg%3E”); }
+
+.wa-msg { max-width:70%; padding:9px 13px; border-radius:10px; font-size:13px; line-height:1.5; }
+.wa-msg-in { background:#1F2C35; border-radius:0 10px 10px 10px; align-self:flex-start; }
+.wa-msg-out { background:#005C4B; border-radius:10px 0 10px 10px; align-self:flex-end; }
+.wa-msg-bot { background:rgba(0,71,255,0.2); border:1px solid rgba(0,194,255,0.2); border-radius:0 10px 10px 10px; align-self:flex-start; }
+.wa-msg-time { font-size:10px; opacity:0.5; margin-top:3px; text-align:right; }
+.wa-msg-label { font-size:10px; color:var(–cyan); margin-bottom:2px; font-weight:600; }
+
+.wa-new-res { background:rgba(0,229,160,0.08); border:1px solid rgba(0,229,160,0.2); border-radius:10px; padding:10px 14px; align-self:flex-start; max-width:75%; }
+.wa-new-res-title { font-size:11px; color:var(–green); font-weight:700; margin-bottom:6px; }
+.wa-new-res-content { font-size:12px; line-height:1.6; }
+
+.wa-input-area { padding:12px 16px; border-top:1px solid var(–border); display:flex; gap:10px; align-items:center; }
+.wa-input { flex:1; background:rgba(255,255,255,0.06); border:1px solid var(–border); border-radius:20px; padding:9px 16px; color:var(–text); font-family:‘DM Sans’,sans-serif; font-size:13px; outline:none; }
+.wa-input:focus { border-color:var(–wa-green); }
+.wa-send-btn { width:36px; height:36px; background:var(–wa-green); border:none; border-radius:50%; cursor:pointer; font-size:15px; flex-shrink:0; }
+
+.empty-chat { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(–muted); gap:10px; }
+.empty-chat-icon { font-size:48px; opacity:0.3; }
+
+/* AGENT ITEMS */
+.agent-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.agent-row:last-child { border-bottom:none; }
+.agent-av { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+.agent-inf { flex:1; }
+.agent-nm { font-size:13px; font-weight:500; }
+.agent-zn { font-size:11px; color:var(–muted); }
+
+/* MODAL */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(5,10,24,0.85); z-index:100; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-overlay.open { display:flex; }
+.modal { background:var(–dark2); border:1px solid var(–border); border-radius:18px; padding:28px; width:460px; max-width:95vw; animation:fadeIn 0.2s ease; }
+.modal-title { font-family:‘Syne’,sans-serif; font-size:18px; font-weight:800; margin-bottom:20px; }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:11px; color:var(–muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:5px; display:block; }
+.form-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(–border); border-radius:9px; padding:9px 13px; color:var(–text); font-family:‘DM Sans’,sans-serif; font-size:13px; outline:none; transition:border-color 0.2s; }
+.form-input:focus { border-color:var(–cyan); }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.modal-actions { display:flex; gap:8px; margin-top:20px; justify-content:flex-end; }
+
+/* TYPING */
+.typing-ind { display:none; align-self:flex-start; background:#1F2C35; padding:10px 14px; border-radius:0 10px 10px 10px; }
+.typing-ind.show { display:flex; gap:4px; align-items:center; }
+.dot { width:5px; height:5px; background:var(–muted); border-radius:50%; animation:blink 1s infinite; }
+.dot:nth-child(2){animation-delay:.2s} .dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr)}.grid-2{grid-template-columns:1fr}}
+
+/* LOGIN */
+.login-screen {
+position:fixed; inset:0;
+background:var(–dark);
+display:flex; align-items:center; justify-content:center;
+z-index:1000;
+padding:20px;
+}
+.login-screen.hidden { display:none; }
+
+.login-box {
+background:var(–dark2);
+border:1px solid var(–border);
+border-radius:24px;
+padding:40px 36px;
+width:100%; max-width:400px;
+text-align:center;
+animation:fadeIn 0.4s ease;
+position:relative;
+overflow:hidden;
+}
+.login-box::before {
+content:’’;
+position:absolute;
+top:-100px; left:50%;
+transform:translateX(-50%);
+width:300px; height:300px;
+background:radial-gradient(circle, rgba(0,71,255,0.12) 0%, transparent 70%);
+pointer-events:none;
+}
+
+.login-logo {
+width:64px; height:64px;
+background:linear-gradient(135deg,var(–blue),var(–cyan));
+border-radius:20px;
+display:flex; align-items:center; justify-content:center;
+font-size:28px;
+margin:0 auto 20px;
+box-shadow:0 8px 32px rgba(0,71,255,0.3);
+}
+.login-title { font-family:‘Syne’,sans-serif; font-size:24px; font-weight:800; margin-bottom:4px; }
+.login-sub { color:var(–muted); font-size:14px; margin-bottom:32px; }
+
+.login-form { text-align:left; }
+.login-label { font-size:11px; color:var(–muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; display:block; }
+.login-input {
+width:100%;
+background:rgba(255,255,255,0.05);
+border:1px solid var(–border);
+border-radius:12px;
+padding:12px 16px;
+color:var(–text);
+font-family:‘DM Sans’,sans-serif;
+font-size:14px;
+outline:none;
+transition:border-color 0.2s;
+margin-bottom:16px;
+}
+.login-input:focus { border-color:var(–cyan); }
+
+.login-btn {
+width:100%;
+background:linear-gradient(135deg,var(–blue),var(–cyan));
+color:white;
+border:none;
+border-radius:12px;
+padding:13px;
+font-family:‘Syne’,sans-serif;
+font-size:15px;
+font-weight:700;
+cursor:pointer;
+margin-top:8px;
+transition:all 0.2s;
+}
+.login-btn:hover { opacity:0.85; transform:translateY(-1px); }
+
+.login-error {
+background:rgba(255,71,87,0.1);
+border:1px solid rgba(255,71,87,0.3);
+border-radius:10px;
+padding:10px 14px;
+color:var(–red);
+font-size:13px;
+margin-top:12px;
+display:none;
+text-align:center;
+}
+.login-error.show { display:block; }
+
+.login-users {
+margin-top:24px;
+padding-top:20px;
+border-top:1px solid var(–border);
+}
+.login-users-title { font-size:11px; color:var(–muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; }
+.login-user-btns { display:flex; flex-direction:column; gap:8px; }
+.login-user-btn {
+display:flex; align-items:center; gap:10px;
+background:rgba(255,255,255,0.04);
+border:1px solid var(–border);
+border-radius:10px;
+padding:10px 14px;
+cursor:pointer;
+transition:all 0.2s;
+width:100%;
+text-align:left;
+font-family:‘DM Sans’,sans-serif;
+}
+.login-user-btn:hover { background:rgba(255,255,255,0.08); border-color:rgba(0,194,255,0.3); }
+.login-user-av { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; flex-shrink:0; }
+.login-user-info { flex:1; }
+.login-user-name { font-size:13px; font-weight:500; color:var(–text); }
+.login-user-role { font-size:11px; color:var(–muted); }
+.login-user-pass { font-size:11px; color:var(–cyan); font-family:monospace; }
+
+/* LOGOUT BTN */
+.logout-btn {
+display:flex; align-items:center; gap:8px;
+background:rgba(255,71,87,0.1);
+border:1px solid rgba(255,71,87,0.2);
+border-radius:8px;
+padding:7px 12px;
+color:var(–red);
+font-size:12px;
+cursor:pointer;
+margin-top:10px;
+width:100%;
+font-family:‘DM Sans’,sans-serif;
+transition:0.2s;
+}
+.logout-btn:hover { background:rgba(255,71,87,0.2); }
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+
+<div class="login-screen" id="login-screen">
+<div class="login-box">
+<div class="login-logo">🚗</div>
+<div class="login-title">Access Wash</div>
+<div class="login-sub">Kinshasa, RDC — Connexion sécurisée</div>
+<div class="login-form">
+<label class="login-label">Identifiant</label>
+<input class="login-input" id="login-user" placeholder="Ex: admin" onkeydown="if(event.key==='Enter')tryLogin()">
+<label class="login-label">Mot de passe</label>
+<input class="login-input" id="login-pass" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+<button class="login-btn" onclick="tryLogin()">🔐 Se connecter</button>
+<div class="login-error" id="login-error">❌ Identifiant ou mot de passe incorrect</div>
+</div>
+<div class="login-users">
+<div class="login-users-title">Connexion rapide</div>
+<div class="login-user-btns">
+<button class="login-user-btn" onclick="quickLogin('admin','admin123')">
+<div class="login-user-av" style="background:rgba(0,71,255,0.2);color:#00C2FF">AW</div>
+<div class="login-user-info"><div class="login-user-name">Admin Access</div><div class="login-user-role">Directeur</div></div>
+<div class="login-user-pass">admin123</div>
+</button>
+<button class="login-user-btn" onclick="quickLogin('agent1','agent123')">
+<div class="login-user-av" style="background:rgba(0,229,160,0.2);color:#00E5A0">PL</div>
+<div class="login-user-info"><div class="login-user-name">Patrick Lumu</div><div class="login-user-role">Agent</div></div>
+<div class="login-user-pass">agent123</div>
+</button>
+<button class="login-user-btn" onclick="quickLogin('agent2','agent456')">
+<div class="login-user-av" style="background:rgba(255,107,53,0.2);color:#FF6B35">GN</div>
+<div class="login-user-info"><div class="login-user-name">Grace Nkosi</div><div class="login-user-role">Agent</div></div>
+<div class="login-user-pass">agent456</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar" id="sidebar-app" style="display:none">
+<div class="logo">
+<div class="logo-icon">🚗</div>
+<div class="logo-text">Access Wash <span>Kinshasa, RDC</span></div>
+</div>
+
+<div class="nav-label">Principal</div>
+<button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Tableau de bord</button>
+<button class="nav-btn" onclick="showPage('reservations',this)"><span class="nav-icon">📅</span>Réservations<span class="notif-dot" id="res-count">4</span></button>
+<button class="nav-btn" onclick="showPage('whatsapp',this)"><span class="nav-icon">💬</span>WhatsApp Bot<span class="live-dot"></span></button>
+<button class="nav-btn" onclick="showPage('clients',this)"><span class="nav-icon">👥</span>Clients</button>
+<button class="nav-btn" onclick="showPage('agents',this)"><span class="nav-icon">🧹</span>Agents</button>
+
+<div class="nav-label">Finance</div>
+<button class="nav-btn" onclick="showPage('paiements',this)"><span class="nav-icon">💰</span>Paiements</button>
+
+<div class="sidebar-footer">
+<div class="user-card">
+<div class="user-avatar" id="current-av">AW</div>
+<div class="user-info"><div class="user-name" id="current-name">Admin Access</div><div class="user-role" id="current-role">Directeur</div></div>
+</div>
+<button class="logout-btn" onclick="logout()">🚪 Se déconnecter</button>
+</div>
+</aside>
+
+<!-- MAIN -->
+
+<main class="main" id="main-app" style="display:none">
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="page active">
+<div class="page-header">
+<div><div class="page-title">Tableau de bord 📊</div><div class="page-sub">Vue d'ensemble — Access Wash</div></div>
+<button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle Réservation</button>
+</div>
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-glow" style="background:var(--blue)"></div><div class="stat-icon">📅</div><div class="stat-val" id="stat-today">4</div><div class="stat-lbl">Réservations du jour</div><div class="stat-chg" style="color:var(--green)">↑ inclut WhatsApp</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--green)"></div><div class="stat-icon">✅</div><div class="stat-val" id="stat-done">8</div><div class="stat-lbl">Lavages terminés</div><div class="stat-chg" style="color:var(--green)">67% du jour</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--orange)"></div><div class="stat-icon">🤖</div><div class="stat-val" id="stat-bot">3</div><div class="stat-lbl">Via Bot WhatsApp</div><div class="stat-chg" style="color:var(--cyan)">Automatique IA</div></div>
+<div class="stat-card"><div class="stat-glow" style="background:var(--yellow)"></div><div class="stat-icon">💵</div><div class="stat-val">48 500 FC</div><div class="stat-lbl">Recettes du jour</div><div class="stat-chg" style="color:var(--green)">↑ +12%</div></div>
+</div>
+<div class="grid-2">
+<div class="card">
+<div class="card-title">Réservations récentes <span style="font-size:11px;color:var(--muted);font-weight:400">Aujourd'hui</span></div>
+<table class="table"><thead><tr><th>Client</th><th>Service</th><th>Agent</th><th>Heure</th><th>Source</th><th>Statut</th></tr></thead>
+<tbody id="dash-res-table"></tbody></table>
+</div>
+<div class="card">
+<div class="card-title">Agents actifs</div>
+<div id="dash-agents"></div>
+</div>
+</div>
+</div>
+
+<!-- RESERVATIONS -->
+
+<div id="reservations" class="page">
+<div class="page-header">
+<div><div class="page-title">Réservations 📅</div><div class="page-sub">Toutes les réservations</div></div>
+<button class="btn btn-primary" onclick="openModal('modal-res')">+ Nouvelle</button>
+</div>
+<div class="card">
+<table class="table"><thead><tr><th>ID</th><th>Client</th><th>Tél</th><th>Service</th><th>Agent</th><th>Date/Heure</th><th>Zone</th><th>Montant</th><th>Source</th><th>Statut</th><th>Action</th></tr></thead>
+<tbody id="res-table"></tbody></table>
+</div>
+</div>
+
+<!-- WHATSAPP BOT -->
+
+<div id="whatsapp" class="page">
+<div class="page-header">
+<div><div class="page-title">💬 Bot WhatsApp IA</div><div class="page-sub" style="color:var(--wa-green)">🟢 En ligne — Répond automatiquement aux clients</div></div>
+<div style="display:flex;gap:8px;align-items:center">
+<span class="badge bg-wa">IA Connectée</span>
+<span class="badge bg-green" id="wa-res-count">3 réservations aujourd'hui</span>
+</div>
+</div>
+<div class="wa-panel">
+<div class="wa-contacts">
+<div class="wa-contacts-header">💬 Conversations <span class="badge bg-wa" style="margin-left:auto;font-size:10px" id="conv-count">4</span></div>
+<div id="contacts-list"></div>
+</div>
+<div class="wa-chat-area">
+<div id="wa-empty" class="empty-chat">
+<div class="empty-chat-icon">💬</div>
+<div>Sélectionnez une conversation</div>
+<div style="font-size:12px">pour voir les messages</div>
+</div>
+<div id="wa-active-chat" style="display:none;flex-direction:column;height:100%">
+<div class="wa-chat-header">
+<div class="contact-avatar" id="active-av" style="background:#0047FF20;color:#00C2FF">M</div>
+<div>
+<div class="wa-chat-name" id="active-name">Client</div>
+<div class="wa-chat-status">🤖 Géré par le bot</div>
+</div>
+<div class="wa-chat-actions">
+<button class="btn btn-ghost btn-sm" onclick="convertToReservation()">📅 Créer réservation</button>
+<button class="btn btn-ghost btn-sm" id="assign-btn" onclick="toggleAssign()">👤 Prendre en charge</button>
+</div>
+</div>
+<div class="wa-messages" id="wa-messages"></div>
+<div class="wa-input-area">
+<input class="wa-input" id="wa-msg-input" placeholder="Répondre manuellement..." onkeydown="if(event.key==='Enter')sendWaMsg()">
+<button class="wa-send-btn" onclick="sendWaMsg()">➤</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- CLIENTS -->
+
+<div id="clients" class="page">
+<div class="page-header">
+<div><div class="page-title">Clients 👥</div><div class="page-sub">Base de données</div></div>
+<button class="btn btn-primary" onclick="openModal('modal-client')">+ Nouveau</button>
+</div>
+<div class="card">
+<table class="table"><thead><tr><th>Nom</th><th>Téléphone</th><th>Zone</th><th>Réservations</th><th>Total</th><th>Source</th><th>Statut</th></tr></thead>
+<tbody id="cli-table"></tbody></table>
+</div>
+</div>
+
+<!-- AGENTS -->
+
+<div id="agents" class="page">
+<div class="page-header">
+<div><div class="page-title">Agents 🧹</div><div class="page-sub">Gérer l'équipe</div></div>
+<button class="btn btn-primary" onclick="openModal('modal-agent')">+ Nouvel Agent</button>
+</div>
+<div class="card">
+<table class="table"><thead><tr><th>Agent</th><th>Tél</th><th>Zone</th><th>Lavages</th><th>Note</th><th>Statut</th></tr></thead>
+<tbody id="age-table"></tbody></table>
+</div>
+</div>
+
+<!-- PAIEMENTS -->
+
+<div id="paiements" class="page">
+<div class="page-header"><div><div class="page-title">Paiements 💰</div><div class="page-sub">Suivi des recettes</div></div></div>
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+<div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val">324 000 FC</div><div class="stat-lbl">Ce mois</div></div>
+<div class="stat-card"><div class="stat-icon">💳</div><div class="stat-val">47</div><div class="stat-lbl">Paiements reçus</div></div>
+<div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val">15 000 FC</div><div class="stat-lbl">En attente</div></div>
+</div>
+<div class="card">
+<table class="table"><thead><tr><th>Client</th><th>Service</th><th>Montant</th><th>Méthode</th><th>Date</th><th>Statut</th></tr></thead>
+<tbody id="pay-table"></tbody></table>
+</div>
+</div>
+
+</main>
+
+<!-- TOAST NOTIFICATION -->
+
+<div class="toast" id="toast">
+<div class="toast-icon">💬</div>
+<div>
+<div class="toast-title" id="toast-title">Nouveau message WhatsApp</div>
+<div class="toast-body" id="toast-body">Un client vient de contacter le bot</div>
+<div class="toast-source">🤖 Via Bot WhatsApp IA</div>
+</div>
+</div>
+
+<!-- MODAL RESERVATION -->
+
+<div class="modal-overlay" id="modal-res">
+<div class="modal">
+<div class="modal-title">📅 Nouvelle Réservation</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Nom client</label><input class="form-input" id="r-nom" placeholder="Nom complet"></div>
+<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="r-tel" placeholder="+243..."></div>
+</div>
+<div class="form-group"><label class="form-label">Service</label>
+<select class="form-input" id="r-service"><option>Lavage simple — 4 000 FC</option><option>Lavage complet — 7 000 FC</option><option>Intérieur + Extérieur — 10 000 FC</option><option>Cire & Polissage — 15 000 FC</option></select>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Date</label><input class="form-input" id="r-date" type="date"></div>
+<div class="form-group"><label class="form-label">Heure</label><input class="form-input" id="r-heure" type="time"></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="r-zone" placeholder="Quartier"></div>
+<div class="form-group"><label class="form-label">Agent</label>
+<select class="form-input" id="r-agent"><option>Patrick Lumu</option><option>Grace Nkosi</option><option>Didier Mbemba</option><option>Ange Mukendi</option><option>Serge Bope</option></select>
+</div>
+</div>
+<div class="form-group"><label class="form-label">Source</label>
+<select class="form-input" id="r-source"><option>Manuel</option><option>WhatsApp Bot</option><option>Appel téléphonique</option></select>
+</div>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="closeModal('modal-res')">Annuler</button>
+<button class="btn btn-primary" onclick="addReservation()">Confirmer ✓</button>
+</div>
+</div>
+</div>
+
+<!-- MODAL CLIENT -->
+
+<div class="modal-overlay" id="modal-client">
+<div class="modal">
+<div class="modal-title">👤 Nouveau Client</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="c-nom" placeholder="Nom complet"></div>
+<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="c-tel" placeholder="+243..."></div>
+</div>
+<div class="form-group"><label class="form-label">Zone</label><input class="form-input" id="c-zone" placeholder="Quartier"></div>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="closeModal('modal-client')">Annuler</button>
+<button class="btn btn-primary" onclick="addClient()">Ajouter ✓</button>
+</div>
+</div>
+</div>
+
+<!-- MODAL AGENT -->
+
+<div class="modal-overlay" id="modal-agent">
+<div class="modal">
+<div class="modal-title">🧹 Nouvel Agent</div>
+<div class="form-row">
+<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="a-nom" placeholder="Nom complet"></div>
+<div class="form-group"><label class="form-label">Téléphone</label><input class="form-input" id="a-tel" placeholder="+243..."></div>
+</div>
+<div class="form-group"><label class="form-label">Zone assignée</label><input class="form-input" id="a-zone" placeholder="Ex: Gombe, Lemba..."></div>
+<div class="modal-actions">
+<button class="btn btn-ghost" onclick="closeModal('modal-agent')">Annuler</button>
+<button class="btn btn-primary" onclick="addAgent()">Ajouter ✓</button>
+</div>
+</div>
+</div>
+
+<script>
+// ============ DATA ============
+let reservations = [
+{id:'RES001',client:'Merveille Kalombo',tel:'+243 812 345 678',service:'Lavage complet',agent:'Patrick Lumu',date:'2026-02-23',heure:'08:30',zone:'Gombe',montant:'7 000',source:'Manuel',statut:'Terminé'},
+{id:'RES002',client:'Patient Ngoy',tel:'+243 898 765 432',service:'Lavage simple',agent:'Grace Nkosi',date:'2026-02-23',heure:'10:00',zone:'Lemba',montant:'4 000',source:'WhatsApp Bot',statut:'En cours'},
+{id:'RES003',client:'Divine Mutombo',tel:'+243 823 111 222',service:'Cire & Polissage',agent:'Didier Mbemba',date:'2026-02-23',heure:'11:30',zone:'Matete',montant:'15 000',source:'WhatsApp Bot',statut:'En attente'},
+{id:'RES004',client:'Espoir Kabila',tel:'+243 845 999 888',service:'Lavage complet',agent:'Ange Mukendi',date:'2026-02-23',heure:'14:00',zone:'Ngaliema',montant:'7 000',source:'WhatsApp Bot',statut:'En attente'},
+];
+
+let clients = [
+{nom:'Merveille Kalombo',tel:'+243 812 345 678',zone:'Gombe',reservations:5,total:'35 000 FC',source:'Manuel',statut:'VIP'},
+{nom:'Patient Ngoy',tel:'+243 898 765 432',zone:'Lemba',reservations:2,total:'8 000 FC',source:'WhatsApp',statut:'Actif'},
+{nom:'Divine Mutombo',tel:'+243 823 111 222',zone:'Matete',reservations:8,total:'96 000 FC',source:'WhatsApp',statut:'VIP'},
+{nom:'Espoir Kabila',tel:'+243 845 999 888',zone:'Ngaliema',reservations:1,total:'7 000 FC',source:'WhatsApp',statut:'Nouveau'},
+];
+
+let agents = [
+{nom:'Patrick Lumu',tel:'+243 811 111 111',zone:'Gombe',lavages:42,note:'⭐ 4.9',statut:'Disponible',color:'#0047FF'},
+{nom:'Grace Nkosi',tel:'+243 822 222 222',zone:'Lemba',lavages:38,note:'⭐ 4.8',statut:'En mission',color:'#00E5A0'},
+{nom:'Didier Mbemba',tel:'+243 833 333 333',zone:'Matete',lavages:51,note:'⭐ 4.7',statut:'En mission',color:'#FF6B35'},
+{nom:'Ange Mukendi',tel:'+243 844 444 444',zone:'Ngaliema',lavages:29,note:'⭐ 4.6',statut:'Disponible',color:'#FFD60A'},
+{nom:'Serge Bope',tel:'+243 855 555 555',zone:'Kalamu',lavages:35,note:'⭐ 4.8',statut:'Disponible',color:'#00C2FF'},
+];
+
+let paiements = [
+{client:'Merveille Kalombo',service:'Lavage complet',montant:'7 000 FC',methode:'Cash',date:'23/02/2026',statut:'Payé'},
+{client:'Patient Ngoy',service:'Lavage simple',montant:'4 000 FC',methode:'M-Pesa',date:'23/02/2026',statut:'En attente'},
+{client:'Divine Mutombo',service:'Cire & Polissage',montant:'15 000 FC',methode:'Airtel Money',date:'23/02/2026',statut:'Payé'},
+];
+
+// WhatsApp conversations
+let waConversations = [
+{
+id:1, name:'Patient Ngoy', tel:'+243 898 765 432', color:'#00E5A0', initials:'PN', unread:0, managed:false,
+messages:[
+{from:'client',text:'Bonjour, je voudrais laver ma voiture',time:'09:45'},
+{from:'bot',text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nJe peux vous aider avec :\n1️⃣ Réservation\n2️⃣ Tarifs\n3️⃣ Suivi\n4️⃣ Agent humain',time:'09:45'},
+{from:'client',text:'2 tarifs',time:'09:46'},
+{from:'bot',text:'Nos tarifs 💰 :\n🚿 Lavage simple — 4 000 FC\n🚗 Lavage complet — 7 000 FC\n✨ Intérieur + Extérieur — 10 000 FC\n💎 Cire & Polissage — 15 000 FC\n📅 Forfait mensuel — 25 000 FC',time:'09:46'},
+{from:'client',text:'Ok je prends lavage simple',time:'09:47'},
+{from:'bot',text:'Super ! 📅 Pour votre réservation, quel est votre quartier ?',time:'09:47'},
+{from:'client',text:'Lemba',time:'09:48'},
+{from:'bot',text:'Parfait ! Quelle date et heure vous convient ?',time:'09:48'},
+{from:'client',text:'Aujourd\'hui à 10h',time:'09:49'},
+{from:'bot',text:'✅ Réservation confirmée !\n\n👤 Patient Ngoy\n📍 Lemba\n🚿 Lavage simple — 4 000 FC\n🕐 Aujourd\'hui à 10h00\n\nUn agent sera chez vous à l\'heure dite ! 🙏',time:'09:49',isRes:true},
+]
+},
+{
+id:2, name:'Divine Mutombo', tel:'+243 823 111 222', color:'#FF6B35', initials:'DM', unread:2, managed:false,
+messages:[
+{from:'client',text:'Bonjour Access Wash',time:'10:30'},
+{from:'bot',text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nComment puis-je vous aider ?',time:'10:30'},
+{from:'client',text:'Je veux la cire et polissage',time:'10:32'},
+{from:'bot',text:'Excellent choix ! 💎 La Cire & Polissage est à 15 000 FC.\n\nVotre quartier ?',time:'10:32'},
+{from:'client',text:'Matete, demain matin 9h',time:'10:33'},
+{from:'bot',text:'✅ Réservation créée !\n\n👤 Divine Mutombo\n📍 Matete\n💎 Cire & Polissage — 15 000 FC\n🕐 Demain à 09h00\n\nMerci de votre confiance ! 🙏',time:'10:33',isRes:true},
+]
+},
+{
+id:3, name:'Espoir Kabila', tel:'+243 845 999 888', color:'#FFD60A', initials:'EK', unread:1, managed:false,
+messages:[
+{from:'client',text:'Bonjour, vous faites quelles zones ?',time:'11:00'},
+{from:'bot',text:'Bonjour ! 😊 Nous couvrons toute la ville de Kinshasa !\n\nGombe, Lemba, Matete, Ngaliema, Kalamu, Kintambo et bien plus encore.\n\nVoulez-vous faire une réservation ?',time:'11:00'},
+{from:'client',text:'Oui s\'il vous plaît',time:'11:05'},
+{from:'client',text:'Lavage complet à Ngaliema',time:'11:05'},
+]
+},
+{
+id:4, name:'Grâce Mwamba', tel:'+243 870 123 456', color:'#00C2FF', initials:'GM', unread:0, managed:true,
+messages:[
+{from:'client',text:'Bonjour, j\'ai un problème avec mon agent',time:'08:15'},
+{from:'bot',text:'Bonjour ! Je vous mets en contact avec un agent humain...',time:'08:15'},
+{from:'admin',text:'Bonjour Grâce ! Je suis l\'admin Access Wash. Quel est le problème ?',time:'08:16'},
+{from:'client',text:'L\'agent n\'est pas encore arrivé après 1 heure',time:'08:17'},
+{from:'admin',text:'Nous nous excusons pour ce retard. Je contacte l\'agent immédiatement et vous rappelle dans 5 minutes.',time:'08:18'},
+{from:'client',text:'Merci',time:'08:18'},
+]
+},
+];
+
+let activeConvId = null;
+let humanTakenOver = false;
+
+// ============ NAVIGATION ============
+function showPage(id, btn) {
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+if(btn) btn.classList.add('active');
+renderAll();
+}
+
+// ============ BADGES ============
+function badge(s) {
+const m = {
+'Terminé':'bg-green','En cours':'bg-blue','En attente':'bg-yellow','Annulé':'bg-red',
+'Payé':'bg-green','VIP':'bg-blue','Actif':'bg-green','Nouveau':'bg-yellow',
+'Disponible':'bg-green','En mission':'bg-orange',
+'WhatsApp Bot':'bg-wa','Manuel':'bg-blue','WhatsApp':'bg-wa','Appel téléphonique':'bg-yellow'
+};
+return `<span class="badge ${m[s]||'bg-yellow'}">${s}</span>`;
+}
+
+function getTime() { return new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}); }
+
+// ============ RENDER ============
+function renderDashboard() {
+document.getElementById('stat-today').textContent = reservations.length;
+const botCount = reservations.filter(r=>r.source==='WhatsApp Bot').length;
+document.getElementById('stat-bot').textContent = botCount;
+
+const tb = document.getElementById('dash-res-table');
+if(tb) tb.innerHTML = reservations.slice(0,5).map(r=>`<tr>
+<td><strong>${r.client}</strong></td>
+<td>${r.service}</td>
+<td>${r.agent}</td>
+<td>${r.heure}</td>
+<td>${badge(r.source)}</td>
+<td>${badge(r.statut)}</td>
+</tr>`).join('');
+
+const ag = document.getElementById('dash-agents');
+if(ag) ag.innerHTML = agents.map(a=>`<div class="agent-row">
+<div class="agent-av" style="background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div>
+<div class="agent-inf"><div class="agent-nm">${a.nom}</div><div class="agent-zn">${a.zone}</div></div>
+${badge(a.statut)}
+</div>`).join('');
+}
+
+function renderReservations() {
+const tb = document.getElementById('res-table');
+if(!tb) return;
+tb.innerHTML = reservations.map((r,i)=>`<tr>
+<td style="color:var(--muted);font-size:11px">${r.id}</td>
+<td><strong>${r.client}</strong></td>
+<td style="color:var(--muted)">${r.tel}</td>
+<td>${r.service}</td>
+<td>${r.agent}</td>
+<td>${r.date} ${r.heure}</td>
+<td>${r.zone}</td>
+<td style="color:var(--green);font-weight:600">${r.montant} FC</td>
+<td>${badge(r.source)}</td>
+<td>${badge(r.statut)}</td>
+<td><button class="btn btn-ghost btn-sm" onclick="delRes(${i})">✕</button></td>
+</tr>`).join('');
+document.getElementById('res-count').textContent = reservations.filter(r=>r.statut==='En attente').length;
+}
+
+function renderClients() {
+const tb = document.getElementById('cli-table');
+if(!tb) return;
+tb.innerHTML = clients.map(c=>`<tr>
+<td><strong>${c.nom}</strong></td>
+<td style="color:var(--muted)">${c.tel}</td>
+<td>${c.zone}</td>
+<td style="text-align:center">${c.reservations}</td>
+<td style="color:var(--green);font-weight:600">${c.total}</td>
+<td>${badge(c.source||'Manuel')}</td>
+<td>${badge(c.statut)}</td>
+</tr>`).join('');
+}
+
+function renderAgents() {
+const tb = document.getElementById('age-table');
+if(!tb) return;
+tb.innerHTML = agents.map(a=>`<tr>
+<td><div style="display:flex;align-items:center;gap:10px"><div class="agent-av" style="width:30px;height:30px;font-size:11px;background:${a.color}20;color:${a.color}">${a.nom.split(' ').map(x=>x[0]).join('')}</div><strong>${a.nom}</strong></div></td>
+<td style="color:var(--muted)">${a.tel}</td>
+<td>${a.zone}</td>
+<td>${a.lavages}</td>
+<td>${a.note}</td>
+<td>${badge(a.statut)}</td>
+</tr>`).join('');
+}
+
+function renderPaiements() {
+const tb = document.getElementById('pay-table');
+if(!tb) return;
+tb.innerHTML = paiements.map(p=>`<tr>
+<td><strong>${p.client}</strong></td>
+<td>${p.service}</td>
+<td style="color:var(--green);font-weight:600">${p.montant}</td>
+<td>${p.methode}</td>
+<td style="color:var(--muted)">${p.date}</td>
+<td>${badge(p.statut)}</td>
+</tr>`).join('');
+}
+
+function renderWaContacts() {
+const list = document.getElementById('contacts-list');
+if(!list) return;
+list.innerHTML = waConversations.map(c=>`
+<div class="contact-item ${activeConvId===c.id?'active':''}" onclick="openConv(${c.id})">
+<div class="contact-avatar" style="background:${c.color}20;color:${c.color}">${c.initials}</div>
+<div class="contact-info">
+<div class="contact-name">${c.name} ${c.managed?'<span style="font-size:10px;color:var(--cyan)">👤</span>':''}</div>
+<div class="contact-preview">${c.messages[c.messages.length-1]?.text?.substring(0,32)||''}...</div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+<div class="contact-time">${c.messages[c.messages.length-1]?.time||''}</div>
+${c.unread>0?`<div class="contact-unread">${c.unread}</div>`:''}
+</div>
+</div>
+`).join('');
+document.getElementById('conv-count').textContent = waConversations.length;
+const waRes = waConversations.reduce((acc,c)=>acc+c.messages.filter(m=>m.isRes).length,0);
+document.getElementById('wa-res-count').textContent = `${waRes} réservations aujourd'hui`;
+}
+
+function openConv(id) {
+activeConvId = id;
+const conv = waConversations.find(c=>c.id===id);
+if(!conv) return;
+conv.unread = 0;
+humanTakenOver = conv.managed;
+
+document.getElementById('wa-empty').style.display = 'none';
+const activeChat = document.getElementById('wa-active-chat');
+activeChat.style.display = 'flex';
+
+document.getElementById('active-name').textContent = conv.name;
+document.getElementById('active-av').textContent = conv.initials;
+document.getElementById('active-av').style.background = conv.color + '20';
+document.getElementById('active-av').style.color = conv.color;
+document.getElementById('assign-btn').textContent = conv.managed ? '🤖 Remettre au bot' : '👤 Prendre en charge';
+
+renderMessages(conv);
+renderWaContacts();
+}
+
+function renderMessages(conv) {
+const container = document.getElementById('wa-messages');
+container.innerHTML = conv.messages.map(m=>{
+let cls = 'wa-msg-in';
+let label = '';
+if(m.from==='bot') { cls='wa-msg-bot'; label='<div class="wa-msg-label">🤖 Bot IA</div>'; }
+else if(m.from==='admin') { cls='wa-msg-out'; }
+else if(m.from==='client') { cls='wa-msg-in'; }
+
+if(m.isRes) return `
+<div class="wa-new-res">
+<div class="wa-new-res-title">✅ Réservation créée automatiquement</div>
+<div class="wa-new-res-content">${m.text.replace(/\n/g,'<br>')}</div>
+<div class="wa-msg-time">${m.time}</div>
+</div>`;
+
+return `<div class="wa-msg ${cls}">${label}${m.text.replace(/\n/g,'<br>')}<div class="wa-msg-time">${m.time}</div></div>`;
+}).join('');
+container.scrollTop = container.scrollHeight;
+}
+
+function sendWaMsg() {
+const input = document.getElementById('wa-msg-input');
+const text = input.value.trim();
+if(!text || !activeConvId) return;
+input.value = '';
+const conv = waConversations.find(c=>c.id===activeConvId);
+conv.messages.push({from:'admin', text, time:getTime()});
+conv.managed = true;
+humanTakenOver = true;
+document.getElementById('assign-btn').textContent = '🤖 Remettre au bot';
+renderMessages(conv);
+renderWaContacts();
+}
+
+function toggleAssign() {
+const conv = waConversations.find(c=>c.id===activeConvId);
+if(!conv) return;
+conv.managed = !conv.managed;
+humanTakenOver = conv.managed;
+document.getElementById('assign-btn').textContent = conv.managed ? '🤖 Remettre au bot' : '👤 Prendre en charge';
+const status = document.querySelector('.wa-chat-status');
+if(status) status.textContent = conv.managed ? '👤 Pris en charge par admin' : '🤖 Géré par le bot';
+}
+
+function convertToReservation() {
+const conv = waConversations.find(c=>c.id===activeConvId);
+if(!conv) return;
+document.getElementById('r-nom').value = conv.name;
+document.getElementById('r-tel').value = conv.tel;
+document.getElementById('r-source').value = 'WhatsApp Bot';
+openModal('modal-res');
+}
+
+function renderAll() {
+renderDashboard();
+renderReservations();
+renderClients();
+renderAgents();
+renderPaiements();
+renderWaContacts();
+if(activeConvId) openConv(activeConvId);
+}
+
+// ============ MODALS ============
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+
+// ============ ACTIONS ============
+function addReservation() {
+const nom = document.getElementById('r-nom').value.trim();
+if(!nom) return;
+const id = 'RES'+String(reservations.length+1).padStart(3,'0');
+reservations.unshift({
+id, client:nom, tel:document.getElementById('r-tel').value,
+service:document.getElementById('r-service').value.split(' — ')[0],
+agent:document.getElementById('r-agent').value,
+date:document.getElementById('r-date').value||'2026-02-23',
+heure:document.getElementById('r-heure').value||'--:--',
+zone:document.getElementById('r-zone').value||'—',
+montant:document.getElementById('r-service').value.match(/[\d\s]+(?= FC)/)?document.getElementById('r-service').value.match(/([\d\s]+) FC/)?.[1]:'—',
+source:document.getElementById('r-source').value,
+statut:'En attente'
+});
+closeModal('modal-res');
+['r-nom','r-tel','r-zone','r-date','r-heure'].forEach(id=>document.getElementById(id).value='');
+showToast('📅 Réservation ajoutée !', nom + ' — ' + document.getElementById('r-service')?.value?.split(' — ')[0]);
+renderAll();
+}
+
+function delRes(i) {
+if(confirm('Supprimer cette réservation ?')) { reservations.splice(i,1); renderAll(); }
+}
+
+function addClient() {
+const nom = document.getElementById('c-nom').value.trim();
+if(!nom) return;
+clients.unshift({nom, tel:document.getElementById('c-tel').value, zone:document.getElementById('c-zone').value, reservations:0, total:'0 FC', source:'Manuel', statut:'Nouveau'});
+closeModal('modal-client');
+['c-nom','c-tel','c-zone'].forEach(id=>document.getElementById(id).value='');
+renderAll();
+}
+
+function addAgent() {
+const nom = document.getElementById('a-nom').value.trim();
+if(!nom) return;
+const cols=['#0047FF','#00E5A0','#FF6B35','#FFD60A','#00C2FF'];
+agents.push({nom, tel:document.getElementById('a-tel').value, zone:document.getElementById('a-zone').value, lavages:0, note:'⭐ Nouveau', statut:'Disponible', color:cols[agents.length%cols.length]});
+closeModal('modal-agent');
+['a-nom','a-tel','a-zone'].forEach(id=>document.getElementById(id).value='');
+renderAll();
+}
+
+// ============ TOAST ============
+function showToast(title, body) {
+document.getElementById('toast-title').textContent = title;
+document.getElementById('toast-body').textContent = body;
+const t = document.getElementById('toast');
+t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'), 4000);
+}
+
+// ============ SIMULATE NEW WA MSG ============
+const simulatedMsgs = [
+{name:'Mamie Loso', tel:'+243 877 000 111', color:'#9B59B6', initials:'ML', text:'Bonjour, j\'ai besoin d\'un lavage urgent !'},
+{name:'Boss Keba', tel:'+243 877 222 333', color:'#E74C3C', initials:'BK', text:'C\'est combien pour 2 voitures ?'},
+{name:'Josée Nkemi', tel:'+243 877 444 555', color:'#1ABC9C', initials:'JN', text:'Vous êtes disponible demain matin ?'},
+];
+let simIdx = 0;
+
+function simulateNewMsg() {
+const m = simulatedMsgs[simIdx % simulatedMsgs.length];
+simIdx++;
+const newConv = {
+id: Date.now(), name:m.name, tel:m.tel, color:m.color, initials:m.initials, unread:1, managed:false,
+messages:[
+{from:'client', text:m.text, time:getTime()},
+{from:'bot', text:'Bonjour ! 👋 Bienvenue chez Access Wash 🚗💦\n\nComment puis-je vous aider ?\n1️⃣ Réservation\n2️⃣ Tarifs\n3️⃣ Suivi\n4️⃣ Agent humain', time:getTime()},
+]
+};
+waConversations.unshift(newConv);
+showToast('💬 Nouveau message WhatsApp', m.name + ' : ' + m.text.substring(0,40));
+renderWaContacts();
+}
+
+// Simulate new messages every 30s
+setInterval(simulateNewMsg, 30000);
+
+// ============ LOGIN ============
+const USERS = {
+'admin': { pass:'admin123', name:'Admin Access', role:'Directeur', av:'AW', color:'#00C2FF' },
+'agent1': { pass:'agent123', name:'Patrick Lumu', role:'Agent — Gombe', av:'PL', color:'#00E5A0' },
+'agent2': { pass:'agent456', name:'Grace Nkosi', role:'Agent — Lemba', av:'GN', color:'#FF6B35' },
+};
+
+function tryLogin() {
+const u = document.getElementById('login-user').value.trim();
+const p = document.getElementById('login-pass').value.trim();
+const user = USERS[u];
+if(user && user.pass === p) {
+doLogin(user);
+} else {
+document.getElementById('login-error').classList.add('show');
+setTimeout(()=>document.getElementById('login-error').classList.remove('show'), 3000);
+}
+}
+
+function quickLogin(u, p) {
+document.getElementById('login-user').value = u;
+document.getElementById('login-pass').value = p;
+tryLogin();
+}
+
+function doLogin(user) {
+document.getElementById('login-screen').classList.add('hidden');
+document.getElementById('sidebar-app').style.display = 'flex';
+document.getElementById('main-app').style.display = 'block';
+document.getElementById('current-name').textContent = user.name;
+document.getElementById('current-role').textContent = user.role;
+document.getElementById('current-av').textContent = user.av;
+document.getElementById('current-av').style.background = user.color + '30';
+document.getElementById('current-av').style.color = user.color;
+renderAll();
+}
+
+function logout() {
+document.getElementById('login-screen').classList.remove('hidden');
+document.getElementById('sidebar-app').style.display = 'none';
+document.getElementById('main-app').style.display = 'none';
+document.getElementById('login-user').value = '';
+document.getElementById('login-pass').value = '';
+}
+
+// ============ INIT ============
+renderAll();
+</script>
+
+</body>
+</html>
