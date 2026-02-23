@@ -604,34 +604,11 @@ transition:0.2s;
 </div>
 
 <script>
-// ============ DATA ============
-let reservations = [
-{id:'RES001',client:'Merveille Kalombo',tel:'+243 812 345 678',service:'Lavage complet',agent:'Patrick Lumu',date:'2026-02-23',heure:'08:30',zone:'Gombe',montant:'7 000',source:'Manuel',statut:'Terminé'},
-{id:'RES002',client:'Patient Ngoy',tel:'+243 898 765 432',service:'Lavage simple',agent:'Grace Nkosi',date:'2026-02-23',heure:'10:00',zone:'Lemba',montant:'4 000',source:'WhatsApp Bot',statut:'En cours'},
-{id:'RES003',client:'Divine Mutombo',tel:'+243 823 111 222',service:'Cire & Polissage',agent:'Didier Mbemba',date:'2026-02-23',heure:'11:30',zone:'Matete',montant:'15 000',source:'WhatsApp Bot',statut:'En attente'},
-{id:'RES004',client:'Espoir Kabila',tel:'+243 845 999 888',service:'Lavage complet',agent:'Ange Mukendi',date:'2026-02-23',heure:'14:00',zone:'Ngaliema',montant:'7 000',source:'WhatsApp Bot',statut:'En attente'},
-];
-
-let clients = [
-{nom:'Merveille Kalombo',tel:'+243 812 345 678',zone:'Gombe',reservations:5,total:'35 000 FC',source:'Manuel',statut:'VIP'},
-{nom:'Patient Ngoy',tel:'+243 898 765 432',zone:'Lemba',reservations:2,total:'8 000 FC',source:'WhatsApp',statut:'Actif'},
-{nom:'Divine Mutombo',tel:'+243 823 111 222',zone:'Matete',reservations:8,total:'96 000 FC',source:'WhatsApp',statut:'VIP'},
-{nom:'Espoir Kabila',tel:'+243 845 999 888',zone:'Ngaliema',reservations:1,total:'7 000 FC',source:'WhatsApp',statut:'Nouveau'},
-];
-
-let agents = [
-{nom:'Patrick Lumu',tel:'+243 811 111 111',zone:'Gombe',lavages:42,note:'⭐ 4.9',statut:'Disponible',color:'#0047FF'},
-{nom:'Grace Nkosi',tel:'+243 822 222 222',zone:'Lemba',lavages:38,note:'⭐ 4.8',statut:'En mission',color:'#00E5A0'},
-{nom:'Didier Mbemba',tel:'+243 833 333 333',zone:'Matete',lavages:51,note:'⭐ 4.7',statut:'En mission',color:'#FF6B35'},
-{nom:'Ange Mukendi',tel:'+243 844 444 444',zone:'Ngaliema',lavages:29,note:'⭐ 4.6',statut:'Disponible',color:'#FFD60A'},
-{nom:'Serge Bope',tel:'+243 855 555 555',zone:'Kalamu',lavages:35,note:'⭐ 4.8',statut:'Disponible',color:'#00C2FF'},
-];
-
-let paiements = [
-{client:'Merveille Kalombo',service:'Lavage complet',montant:'7 000 FC',methode:'Cash',date:'23/02/2026',statut:'Payé'},
-{client:'Patient Ngoy',service:'Lavage simple',montant:'4 000 FC',methode:'M-Pesa',date:'23/02/2026',statut:'En attente'},
-{client:'Divine Mutombo',service:'Cire & Polissage',montant:'15 000 FC',methode:'Airtel Money',date:'23/02/2026',statut:'Payé'},
-];
+// ============ DATA (chargé depuis localStorage) ============
+let reservations = [];
+let clients = [];
+let agents = [];
+let paiements = [];
 
 // WhatsApp conversations
 let waConversations = [
@@ -921,11 +898,12 @@ statut:'En attente'
 closeModal('modal-res');
 ['r-nom','r-tel','r-zone','r-date','r-heure'].forEach(id=>document.getElementById(id).value='');
 showToast('📅 Réservation ajoutée !', nom + ' — ' + document.getElementById('r-service')?.value?.split(' — ')[0]);
+sauvegarder();
 renderAll();
 }
 
 function delRes(i) {
-if(confirm('Supprimer cette réservation ?')) { reservations.splice(i,1); renderAll(); }
+if(confirm('Supprimer cette réservation ?')) { reservations.splice(i,1); sauvegarder(); renderAll(); }
 }
 
 function addClient() {
@@ -934,6 +912,7 @@ if(!nom) return;
 clients.unshift({nom, tel:document.getElementById('c-tel').value, zone:document.getElementById('c-zone').value, reservations:0, total:'0 FC', source:'Manuel', statut:'Nouveau'});
 closeModal('modal-client');
 ['c-nom','c-tel','c-zone'].forEach(id=>document.getElementById(id).value='');
+sauvegarder();
 renderAll();
 }
 
@@ -944,6 +923,7 @@ const cols=['#0047FF','#00E5A0','#FF6B35','#FFD60A','#00C2FF'];
 agents.push({nom, tel:document.getElementById('a-tel').value, zone:document.getElementById('a-zone').value, lavages:0, note:'⭐ Nouveau', statut:'Disponible', color:cols[agents.length%cols.length]});
 closeModal('modal-agent');
 ['a-nom','a-tel','a-zone'].forEach(id=>document.getElementById(id).value='');
+sauvegarder();
 renderAll();
 }
 
@@ -982,6 +962,48 @@ renderWaContacts();
 // Simulate new messages every 30s
 setInterval(simulateNewMsg, 30000);
 
+// ============ SAUVEGARDE LOCALE ============
+const DEFAULT_DATA = {
+reservations: [
+{id:'RES001',client:'Merveille Kalombo',tel:'+243 812 345 678',service:'Lavage complet',agent:'Patrick Lumu',date:'2026-02-23',heure:'08:30',zone:'Gombe',montant:'7 000',source:'Manuel',statut:'Terminé'},
+{id:'RES002',client:'Patient Ngoy',tel:'+243 898 765 432',service:'Lavage simple',agent:'Grace Nkosi',date:'2026-02-23',heure:'10:00',zone:'Lemba',montant:'4 000',source:'WhatsApp Bot',statut:'En cours'},
+{id:'RES003',client:'Divine Mutombo',tel:'+243 823 111 222',service:'Cire & Polissage',agent:'Didier Mbemba',date:'2026-02-23',heure:'11:30',zone:'Matete',montant:'15 000',source:'WhatsApp Bot',statut:'En attente'},
+{id:'RES004',client:'Espoir Kabila',tel:'+243 845 999 888',service:'Lavage complet',agent:'Ange Mukendi',date:'2026-02-23',heure:'14:00',zone:'Ngaliema',montant:'7 000',source:'WhatsApp Bot',statut:'En attente'},
+],
+clients: [
+{nom:'Merveille Kalombo',tel:'+243 812 345 678',zone:'Gombe',reservations:5,total:'35 000 FC',source:'Manuel',statut:'VIP'},
+{nom:'Patient Ngoy',tel:'+243 898 765 432',zone:'Lemba',reservations:2,total:'8 000 FC',source:'WhatsApp',statut:'Actif'},
+{nom:'Divine Mutombo',tel:'+243 823 111 222',zone:'Matete',reservations:8,total:'96 000 FC',source:'WhatsApp',statut:'VIP'},
+{nom:'Espoir Kabila',tel:'+243 845 999 888',zone:'Ngaliema',reservations:1,total:'7 000 FC',source:'WhatsApp',statut:'Nouveau'},
+],
+agents: [
+{nom:'Patrick Lumu',tel:'+243 811 111 111',zone:'Gombe',lavages:42,note:'⭐ 4.9',statut:'Disponible',color:'#0047FF'},
+{nom:'Grace Nkosi',tel:'+243 822 222 222',zone:'Lemba',lavages:38,note:'⭐ 4.8',statut:'En mission',color:'#00E5A0'},
+{nom:'Didier Mbemba',tel:'+243 833 333 333',zone:'Matete',lavages:51,note:'⭐ 4.7',statut:'En mission',color:'#FF6B35'},
+{nom:'Ange Mukendi',tel:'+243 844 444 444',zone:'Ngaliema',lavages:29,note:'⭐ 4.6',statut:'Disponible',color:'#FFD60A'},
+{nom:'Serge Bope',tel:'+243 855 555 555',zone:'Kalamu',lavages:35,note:'⭐ 4.8',statut:'Disponible',color:'#00C2FF'},
+],
+paiements: [
+{client:'Merveille Kalombo',service:'Lavage complet',montant:'7 000 FC',methode:'Cash',date:'23/02/2026',statut:'Payé'},
+{client:'Patient Ngoy',service:'Lavage simple',montant:'4 000 FC',methode:'M-Pesa',date:'23/02/2026',statut:'En attente'},
+{client:'Divine Mutombo',service:'Cire & Polissage',montant:'15 000 FC',methode:'Airtel Money',date:'23/02/2026',statut:'Payé'},
+]
+};
+
+function sauvegarder() {
+localStorage.setItem('aw_reservations', JSON.stringify(reservations));
+localStorage.setItem('aw_clients', JSON.stringify(clients));
+localStorage.setItem('aw_agents', JSON.stringify(agents));
+localStorage.setItem('aw_paiements', JSON.stringify(paiements));
+}
+
+function chargerDonnees() {
+reservations = JSON.parse(localStorage.getItem('aw_reservations') || 'null') || DEFAULT_DATA.reservations;
+clients = JSON.parse(localStorage.getItem('aw_clients') || 'null') || DEFAULT_DATA.clients;
+agents = JSON.parse(localStorage.getItem('aw_agents') || 'null') || DEFAULT_DATA.agents;
+paiements = JSON.parse(localStorage.getItem('aw_paiements') || 'null') || DEFAULT_DATA.paiements;
+}
+
 // ============ LOGIN ============
 const USERS = {
 'admin': { pass:'admin123', name:'Admin Access', role:'Directeur', av:'AW', color:'#00C2FF' },
@@ -1008,6 +1030,7 @@ tryLogin();
 }
 
 function doLogin(user) {
+chargerDonnees();
 document.getElementById('login-screen').classList.add('hidden');
 document.getElementById('sidebar-app').style.display = 'flex';
 document.getElementById('main-app').style.display = 'block';
@@ -1033,4 +1056,3 @@ renderAll();
 
 </body>
 </html>
-
